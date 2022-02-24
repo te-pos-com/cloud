@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{{ get_option('site_title', 'ElitKit Purchase Order') }}</title>
+    <title>{{ get_option('site_title', 'ElitKit pembelian Order') }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,44 +33,42 @@
                         '.xss_clean(get_company_option('vat_id')).'<br>' : '' !!}
                     </td>
                     <td>
-                        <img src="{{ get_pdf_company_logo($purchase->company_id) }}" class="mh-80">
+                        <img src="{{ get_pdf_company_logo($pembelian->company_id) }}" class="mh-80">
                     </td>
                 </tr>
 
                 <tr class="information">
                     <td class="pt-4">
                         <h5><b>{{ _lang('Supplier Details') }}</b></h5>
-                        @if(isset($purchase->supplier))
-                        <b>{{ _lang('Name') }}</b> : {{ $purchase->supplier->supplier_name }}<br>
-                        <b>{{ _lang('Email') }}</b> : {{ $purchase->supplier->email }}<br>
-                        <b>{{ _lang('Phone') }}</b> : {{ $purchase->supplier->phone }}<br>
+                        @if(isset($pembelian->supplier))
+                        <b>{{ _lang('Name') }}</b> : {{ $pembelian->supplier->supplier_name }}<br>
+                        <b>{{ _lang('Email') }}</b> : {{ $pembelian->supplier->email }}<br>
+                        <b>{{ _lang('Phone') }}</b> : {{ $pembelian->supplier->phone }}<br>
                         <b>{{ _lang('VAT Number') }}</b> :
-                        {{ $purchase->supplier->vat_number == '' ? _lang('N/A') : $purchase->supplier->vat_number }}<br>
+                        {{ $pembelian->supplier->vat_number == '' ? _lang('N/A') : $pembelian->supplier->vat_number }}<br>
                         @endif
                     </td>
                     <td class="auto-column pt-4">
-                        <h5><b>{{ _lang('Purchase Order') }}</b></h5>
-                        <b>{{ _lang('Order ID') }} #:</b> {{ $purchase->id }}<br>
-                        <b>{{ _lang('Order Date') }}:</b> {{ $purchase->order_date }}<br>
+                        <h5><b>{{ _lang('Pembelian') }}</b></h5>
+                        <b>{{ _lang('No Pembelian') }} #:</b> {{ $pembelian->invoice_number }}<br>
+                        <b>{{ _lang('Tanggal') }}:</b> {{ $pembelian->order_date }}<br>
 
-                        <b>{{ _lang('Order Status') }}:</b>
-
-                        @if($purchase->order_status == 1)
+                        @if($pembelian->order_status == 1)
                         <span class="badge badge-info">{{ _lang('Ordered') }}</span><br>
-                        @elseif($purchase->order_status == 2)
+                        @elseif($pembelian->order_status == 2)
                         <span class="badge badge-danger">{{ _lang('Pending') }}</span><br>
-                        @elseif($purchase->order_status == 3)
+                        @elseif($pembelian->order_status == 3)
                         <span class="badge badge-success">{{ _lang('Received') }}</span><br>
-                        @elseif($purchase->order_status == 4)
+                        @elseif($pembelian->order_status == 4)
                         <span class="badge badge-danger">{{ _lang('Canceled') }}</span><br>
                         @endif
 
                         <b>{{ _lang('Payment') }}:</b>
 
-                        @if($purchase->payment_status == 0)
-                        <span class="badge badge-danger">{{ _lang('Due') }}</span>
+                        @if($pembelian->payment_status == 0)
+                        <span class="badge badge-danger">{{ _lang('Belum Lunas') }}</span>
                         @else
-                        <span class="badge badge-success">{{ _lang('Paid') }}</span>
+                        <span class="badge badge-success">{{ _lang('Lunas') }}</span>
                         @endif
                     </td>
                 </tr>
@@ -92,12 +90,12 @@
                         <th class="text-right">{{ _lang('Unit Cost') }}</th>
                         <th class="text-right wp-100">{{ _lang('Discount')}}</th>
                         <th>{{ _lang('Tax') }}</th>
-                        <th class="text-right">{{ _lang('Line Total') }}</th>
+                        <th class="text-right">{{ _lang('Sub Total') }}</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach($purchase->purchase_items as $item)
+                    @foreach($pembelian->pembelian_items as $item)
                     <tr id="product-{{ $item->product_id }}">
                         <td>
                             <b>{{ $item->item->item_name }}</b><br>{{ $item->description }}
@@ -122,10 +120,10 @@
                     <tr>
                         <td>{{ _lang('Sub Total') }}</td>
                         <td class="text-right">
-                            <span>{!! strip_tags(decimalPlace($purchase->product_total, $currency)) !!}</span>
+                            <span>{!! strip_tags(decimalPlace($pembelian->product_total, $currency)) !!}</span>
                         </td>
                     </tr>
-                    @foreach($purchase_taxes as $tax)
+                    @foreach($pembelian_taxes as $tax)
                     <tr>
                         <td>{{ $tax->name }}</td>
                         <td class="text-right">
@@ -136,32 +134,32 @@
                     <tr>
                         <td>{{ _lang('Shipping Cost') }}</td>
                         <td class="text-right">
-                            <span>+ {!! strip_tags(decimalPlace($purchase->shipping_cost, $currency)) !!}</span>
+                            <span>+ {!! strip_tags(decimalPlace($pembelian->shipping_cost, $currency)) !!}</span>
                         </td>
                     </tr>
                     <tr>
                         <td>{{ _lang('Discount') }}</td>
                         <td class="text-right">
-                            <span>- {!! strip_tags(decimalPlace($purchase->order_discount, $currency)) !!}</span>
+                            <span>- {!! strip_tags(decimalPlace($pembelian->order_discount, $currency)) !!}</span>
                         </td>
                     </tr>
                     <tr>
                         <td><b>{{ _lang('Grand Total') }}</b></td>
                         <td class="text-right">
-                            <b>{!! strip_tags(decimalPlace($purchase->grand_total, $currency)) !!}</b>
+                            <b>{!! strip_tags(decimalPlace($pembelian->grand_total, $currency)) !!}</b>
                         </td>
                     </tr>
                     <tr>
                         <td>{{ _lang('Total Paid') }}</td>
                         <td class="text-right">
-                            <span>{!! strip_tags(decimalPlace($purchase->paid, $currency)) !!}</span>
+                            <span>{!! strip_tags(decimalPlace($pembelian->paid, $currency)) !!}</span>
                         </td>
                     </tr>
-                    @if($purchase->payment_status == 0)
+                    @if($pembelian->payment_status == 0)
                     <tr>
                         <td>{{ _lang('Amount Due') }}</td>
                         <td class="text-right">
-                            <span>{!! strip_tags(decimalPlace(($purchase->grand_total - $purchase->paid), $currency))
+                            <span>{!! strip_tags(decimalPlace(($pembelian->grand_total - $pembelian->paid), $currency))
                                 !!}</span>
                         </td>
                     </tr>
@@ -182,7 +180,6 @@
                 </tr>
                 <tr>
                     <th>{{ _lang('Date') }}</th>
-                    <th>{{ _lang('Account') }}</th>
                     <th class="text-right">{{ _lang('Amount') }}</th>
                     <th>{{ _lang('Payment Method') }}</th>
                 </tr>
@@ -191,7 +188,6 @@
                 @foreach($transactions as $transaction)
                 <tr id="transaction-{{ $transaction->id }}">
                     <td>{{ date($date_format, strtotime($transaction->trans_date)) }}</td>
-                    <td>{{ $transaction->account->account_title }}</td>
                     <td class="text-right">{!! strip_tags(decimalPlace($transaction->amount, $currency)) !!}</td>
                     <td>{{ $transaction->payment_method->name }}</td>
                 </tr>
@@ -202,8 +198,8 @@
         <!--END Related Transaction-->
 
         <!--Invoice Note-->
-        @if($purchase->note != '')
-        <div class="invoice-note border-top pt-4">{{ $purchase->note }}</div>
+        @if($pembelian->note != '')
+        <div class="invoice-note border-top pt-4">{{ $pembelian->note }}</div>
         @endif
         <!--End Invoice Note-->
     </div>

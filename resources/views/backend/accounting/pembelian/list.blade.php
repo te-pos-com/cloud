@@ -28,7 +28,8 @@
                             {{ create_option('cabang','id','cabang_name','',array('company_id=' => company_id())) }}
                         </select>
                     </div>
-
+                    @if (jenis_langganan()=="POS")
+                    @else
                     <div class="col-lg-3 mb-2">
                         <label>{{ _lang('Payment Status') }}</label>
                         <select class="form-control select2 select-filter"
@@ -37,9 +38,9 @@
                             <option value="0">{{ _lang('UnPaid') }}</option>
                         </select>
                     </div>
-
+                    @endif
                     <div class="col-lg-3">
-                        <label>{{ _lang('Order Date Range') }}</label>
+                        <label>{{ _lang('Rentang Tanggal Pembelian') }}</label>
                         <input type="text" class="form-control select-filter" id="date_range" autocomplete="off"
                             name="date_range">
                     </div>
@@ -49,7 +50,7 @@
                 <table class="table table-bordered" id="purchase-table">
                     <thead>
                         <tr>
-                            <th>{{ _lang('Order Date') }}</th>
+                            <th>{{ _lang('Tanggal Pembelian') }}</th>
                             <th>{{ _lang('Supplier') }}</th>
                             <th class="text-right">{{ _lang('Grand Total') }}</th>
                             <th class="text-right">{{ _lang('Paid') }}</th>

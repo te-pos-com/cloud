@@ -49,7 +49,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mb-2">
+                            <div class="col-md-6 mb-2"
+                            @if (jenis_langganan()=="POS")
+                                style="display:none"    
+                            @endif
+                            >
                                 <label>{{ _lang('Status Pembayaran') }}</label>
                                 <select class="form-control select2 select-filter" name="order_status"
                                 data-selected="1" multiple="true">
@@ -58,7 +62,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-2" style="margin-top:-10px">
                                 <button type="button" id="submit" class="btn btn-primary btn-sm">{{ _lang('View Report') }}</button>
                             </div>
                         </div>

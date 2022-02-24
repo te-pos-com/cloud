@@ -38,7 +38,22 @@
     @endif
 
     @include('layouts.others.languages')
-
+    <style>
+        div.scrollmenu {
+            overflow: auto;
+            white-space: nowrap;
+            height:500px;
+            float: left;
+        }
+        
+        div.scrollmenu a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -143,7 +158,11 @@
 
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        @include('layouts.menus.'.Auth::user()->user_type)
+                        @if (jenis_langganan()=="POS")
+                            @include('layouts.menus.pos.'.Auth::user()->user_type)
+                        @else
+                            @include('layouts.menus.'.Auth::user()->user_type)
+                        @endif
                     </div>
                 </div>
             </nav>

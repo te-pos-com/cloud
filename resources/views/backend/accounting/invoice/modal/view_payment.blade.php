@@ -5,8 +5,11 @@
         <thead>
             <tr>
                 <th>{{ _lang('Date') }}</th>
-                <th>{{ _lang('Account') }}</th>
-                <th>{{ _lang('Income Type') }}</th>
+                @if(jenis_langganan()=="POS")
+                @else
+                    <th>{{ _lang('Account') }}</th>
+                    <th>{{ _lang('Income Type') }}</th>
+                @endif
                 <th class="text-right">{{ _lang('Amount') }}</th>
                 <th>{{ _lang('Payment Method') }}</th>
                 <th>{{ _lang('Reference') }}</th>
@@ -18,8 +21,11 @@
             @foreach($transactions as $transaction)
             <tr id="transaction-{{ $transaction->id }}">
                 <td>{{ $transaction->trans_date }}</td>
-                <td>{{ $transaction->account->account_title }}</td>
-                <td>{{ $transaction->income_type->name }}</td>
+                @if(jenis_langganan()=="POS")
+                @else
+                    <td>{{ $transaction->account->account_title }}</td>
+                    <td>{{ $transaction->income_type->name }}</td>
+                @endif
                 <td class="text-right">{{ decimalPlace($transaction->amount, $currency) }}</td>
                 <td>{{ $transaction->payment_method->name }}</td>
                 <td>{{ $transaction->reference }}</td>

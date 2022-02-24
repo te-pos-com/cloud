@@ -17,7 +17,7 @@
 					}
 
 					if ($('select[name=cabang_id]').val() != '') {
-						d.client_id = $('select[name=cabang_id]').val();
+						d.cabang_id = $('select[name=cabang_id]').val();
 					}
 					
 					if ($('select[name=client_id]').val() != '') {

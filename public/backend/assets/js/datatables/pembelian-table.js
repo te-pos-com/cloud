@@ -14,7 +14,7 @@
                 }
 
                 if ($('select[name=cabang_id]').val() != '') { 
-                    d.supplier_id = $('select[name=cabang_id]').val();
+                    d.cabang_id = $('select[name=cabang_id]').val();
                 }
                 
                 if ($('select[name=order_status]').val() != '') {
@@ -96,30 +96,30 @@
 			{
                 extend: 'excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4]
                 },
-                title: 'Purchase Orders',
+                title: 'Pembelian',
             },
             {
                 extend: 'copy',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4]
                 },
-                title: 'Purchase Orders',
+                title: 'Pembelian',
             },
             {
                 extend: 'pdf',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4]
                 },
-                title: 'Purchase Orders',
+                title: 'Pembelian',
             },
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5]
+                    columns: [0, 1, 2, 3, 4]
                 },
-                title: 'Purchase Orders',
+                title: 'Pembelian',
                 customize: function (win) {
                     $(win.document.body)
                         .css('font-size', '10pt')

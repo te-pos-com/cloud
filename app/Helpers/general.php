@@ -54,6 +54,16 @@ if (!function_exists('startsWith')) {
     }
 }
 
+if (!function_exists('user_id')) {
+    function user_id() {
+        if (Auth::check()) {
+                return Auth::user()->id;
+        }
+        return '';
+    }
+}
+
+
 if (!function_exists('company_id')) {
     function company_id() {
         if (Auth::check()) {
@@ -65,6 +75,42 @@ if (!function_exists('company_id')) {
                 return Auth::user()->company_id;
             } else {
                 return Auth::user()->id;
+            }
+        }
+        return '';
+    }
+}
+
+if (!function_exists('jenis_langganan')) {
+    function jenis_langganan() {
+        if (Auth::check()) {
+            if (Auth::user()->user_type == 'admin') {
+                return '';
+            }
+
+            if (Auth::user()->jenis_langganan !== "") {
+                return Auth::user()->jenis_langganan;
+            } else {
+                $user_admin = \App\User::where("id",company_id())->first();
+                return $user_admin->jenis_langganan;
+            }
+        }
+        return '';
+    }
+}
+
+if (!function_exists('cabang')) {
+    function cabang() {
+        if (Auth::check()) {
+            if (Auth::user()->user_type == 'admin') {
+                return '';
+            }
+
+            if (Auth::user()->cabang !== NULL) {
+                return Auth::user()->cabang;
+            } else {
+                $user_admin = \App\User::where("id",company_id())->first();
+                return $user_admin->cabang;
             }
         }
         return '';

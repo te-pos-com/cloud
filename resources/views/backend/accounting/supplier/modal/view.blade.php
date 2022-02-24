@@ -24,10 +24,6 @@
         <td>{{ $supplier->address }}</td>
     </tr>
     <tr>
-        <td>{{ _lang('Country') }}</td>
-        <td>{{ $supplier->country }}</td>
-    </tr>
-    <tr>
         <td>{{ _lang('City') }}</td>
         <td>{{ $supplier->city }}</td>
     </tr>

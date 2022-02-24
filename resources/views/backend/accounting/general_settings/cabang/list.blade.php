@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-header d-flex align-items-center">
 				<h4 class="header-title">{{ _lang('Cabang') }}</h4>
-                <a class="btn btn-primary btn-sm ml-auto ajax-modal" data-title="{{ _lang('Add Product Cabang') }}"
+                <a class="btn btn-primary btn-sm ml-auto ajax-modal" data-title="{{ _lang('Add Cabang') }}"
                     href="{{ route('cabang.create') }}"><i class="ti-plus"></i> {{ _lang('Add New') }}</a>
             </div>
 

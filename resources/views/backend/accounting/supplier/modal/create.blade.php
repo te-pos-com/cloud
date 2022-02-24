@@ -20,7 +20,7 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                <label class="control-label">{{ _lang('Vat Number') }}</label>
+                <label class="control-label">{{ _lang('N.P.W.P') }}</label>
                 <input type="text" class="form-control" name="vat_number" value="{{ old('vat_number') }}">
             </div>
         </div>
@@ -43,15 +43,6 @@
             <div class="form-group">
                 <label class="control-label">{{ _lang('Address') }}</label>
                 <input type="text" class="form-control" name="address" value="{{ old('address') }}">
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="control-label">{{ _lang('Country') }}</label>
-                <select class="form-control select2" name="country">
-                    {{ get_country_list(old('country')) }}
-                </select>
             </div>
         </div>
 

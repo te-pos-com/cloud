@@ -26,7 +26,10 @@
                             <div class="form-group">
                                 <label class="control-label">Tipe</label>
                                 <select class="form-control select2" name="tipe">
-                                    <option value="1">Barang Dengan Imei</option>
+                                    @if(jenis_langganan()=="POS")
+                                    @else
+                                        <option value="1">Barang Dengan Imei</option>
+                                    @endif
                                     <option value="2" selected="selected">Barang Dengan Stok</option>
                                     <option value="3">Barang Tidak Dengan Stok (Jasa dll)</option>
                                 </select>

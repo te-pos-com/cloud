@@ -25,10 +25,17 @@ class CabangController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request) {
-        if (!$request->ajax()) {
-            return view('backend.accounting.general_settings.cabang.create');
-        } else {
-            return view('backend.accounting.general_settings.cabang.modal.create');
+         
+        $count_cabang = Cabang::selectRaw("COUNT(id) as total")->first()->total;
+        if (cabang()<=$count_cabang){
+            return view('backend.accounting.general_settings.cabang.modal.limit');
+        }
+        else{
+            if (!$request->ajax()) {
+                return view('backend.accounting.general_settings.cabang.create');
+            } else {
+                return view('backend.accounting.general_settings.cabang.modal.create');
+            }
         }
     }
 

@@ -62,15 +62,6 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">{{ _lang('Country') }}</label>
-                                <select class="form-control select2" name="country">
-                                    {{ get_country_list( $contact->country ) }}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label class="control-label">{{ _lang('Group') }}</label>
                                 <select class="form-control select2" name="group_id">
                                     <option value="">{{ _lang('- Select Group -') }}</option>
@@ -161,60 +152,63 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="togglebutton">
-                        <h4 class="header-title d-flex align-items-center">{{ _lang('Login Details') }}&nbsp;&nbsp;
-                            <input type="checkbox" id="client_login" value="1" name="client_login"
-                                {{ $contact-> user_id != NULL ? 'checked' : '' }}>
-                        </h4>
-                    </div>
-                </div>
-
-                <div class="card-body" id="client_login_card">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Name') }}</label>
-                                <input type="text" class="form-control" name="name" value="{{ $contact->user->name }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Email') }}</label>
-                                <input type="email" class="form-control" name="email"
-                                    value="{{ $contact->user->email }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Password') }}</label>
-                                <input type="password" class="form-control" name="password">
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Confirm Password') }}</label>
-                                <input type="password" class="form-control" name="password_confirmation">
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Status') }}</label>
-                                <select class="form-control auto-select" data-selected="{{ $contact->user->status }}"
-                                    name="status">
-                                    <option value="1">{{ _lang('Active') }}</option>
-                                    <option value="0">{{ _lang('Inactive') }}</option>
-                                </select>
-                            </div>
+            @if(jenis_langganan()=="POS")
+            @else
+                <div class="card">
+                    <div class="card-header">
+                        <div class="togglebutton">
+                            <h4 class="header-title d-flex align-items-center">{{ _lang('Login Details') }}&nbsp;&nbsp;
+                                <input type="checkbox" id="client_login" value="1" name="client_login"
+                                    {{ $contact-> user_id != NULL ? 'checked' : '' }}>
+                            </h4>
                         </div>
                     </div>
+
+                    <div class="card-body" id="client_login_card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Name') }}</label>
+                                    <input type="text" class="form-control" name="name" value="{{ $contact->user->name }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Email') }}</label>
+                                    <input type="email" class="form-control" name="email"
+                                        value="{{ $contact->user->email }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Password') }}</label>
+                                    <input type="password" class="form-control" name="password">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Confirm Password') }}</label>
+                                    <input type="password" class="form-control" name="password_confirmation">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Status') }}</label>
+                                    <select class="form-control auto-select" data-selected="{{ $contact->user->status }}"
+                                        name="status">
+                                        <option value="1">{{ _lang('Active') }}</option>
+                                        <option value="0">{{ _lang('Inactive') }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
 
         <div class="col-md-12 mt-4">

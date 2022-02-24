@@ -50,7 +50,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 mb-2">
+                            <div class="col-lg-6 mb-2"
+                            @if (jenis_langganan()=="POS")
+                                style="display:none"    
+                            @endif
+                            >
                              	<label>{{ _lang('Status') }}</label>
                              	<select class="form-control select2 select-filter" data-placeholder="{{ _lang('Invoice Status') }}" name="order_status" multiple="true">
         							<option value="Unpaid">{{ _lang('Unpaid') }}</option>
@@ -60,7 +64,7 @@
                              	</select>
                             </div>	
 
-                            <div class="col-md-2">
+                            <div class="col-md-2" style="margin-top:-10px">
                                 <button type="button" id="submit" class="btn btn-primary btn-sm">{{ _lang('View Report') }}</button>
                             </div>
                         </div>

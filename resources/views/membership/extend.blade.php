@@ -1,7 +1,4 @@
 @extends('layouts.public')
-
-@section('content')
-<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card my-5">
@@ -24,7 +21,7 @@
                                 <label class="control-label">{{ _lang('Extend Monthly/Yearly') }}</label>
                                 <select class="form-control" name="extend_type" id="extend_type" required>
                                     <option value="yearly">
-                                        {{ _lang('Yearly').' / '.currency( get_option('currency','USD') ).' '.numnumber_format(get_option('yearly_cost')) }}
+                                        {{ _lang('Yearly').' / '.currency( get_option('currency','USD') ).' '.number_format(get_option('yearly_cost')) }}
                                     </option>
                                     <option value="montly">
                                         {{ _lang('Monthly').' / '.currency( get_option('currency','USD') ).' '.number_format(get_option('monthly_cost')) }}
@@ -85,7 +82,7 @@
                         <tbody>
                             <tr>
                                 <td>{{ $title }}</td>
-                                <td>{{ currency(get_option('currency','USD')).' '.$amount }}</td>
+                                <td>{{ currency(get_option('currency','USD')).' '.decimalPlace($amount) }}</td>
                             </tr>
 							<tr>
 								<td colspan="2">
@@ -104,9 +101,12 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card my-5">
+                <img src="{{url('')}}/public/uploads/icon/2903544.jpg" width="100%" height="390px">
+            </div>
+        </div>
     </div>
-</div>
-@endsection
 
 @section('js-script')
 <script>

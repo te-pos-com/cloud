@@ -62,9 +62,9 @@
                                     <b>{{ _lang('Tanggal') }}:</b> {{ $pembelian->order_date }}<br>
                                     <b>{{ _lang('Payment') }}:</b>
                                     @if($pembelian->payment_status == 0)
-                                    <span class="badge badge-danger">{{ _lang('Due') }}</span>
+                                    <span class="badge badge-danger">{{ _lang('Belum Lunas') }}</span>
                                     @else
-                                    <span class="badge badge-success">{{ _lang('Paid') }}</span>
+                                    <span class="badge badge-success">{{ _lang('Lunas') }}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -84,7 +84,7 @@
                                     <th class="text-right">{{ _lang('Unit Cost') }}</th>
                                     <th class="text-right wp-100">{{ _lang('Discount')}}</th>
                                     <th>{{ _lang('Tax') }}</th>
-                                    <th class="text-right">{{ _lang('Line Total') }}</th>
+                                    <th class="text-right">{{ _lang('Sub Total') }}</th>
                                 </tr>
                             </thead>
 

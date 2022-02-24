@@ -21,7 +21,10 @@
                                     data-selected="{{ old('related_to','invoice') }}" name="related_to"
                                     id="email_template_related_to" required>
                                     <option value="invoice">{{ _lang('Invoice') }}</option>
-                                    <option value="quotation">{{ _lang('Quotation') }}</option>
+                                    @if(jenis_langganan()=="POS")
+                                    @else
+                                        <option value="quotation">{{ _lang('Quotation') }}</option>
+                                    @endif
                                 </select>
                             </div>
                         </div>

@@ -14,7 +14,10 @@
             <div class="form-group">
                 <label class="control-label">{{ _lang('Tipe') }}</label>
                 <select class="form-control select2" name="tipe">
-                    <option value="1">{{ _lang('Barang Dengan Imei') }}</option>
+                    @if(jenis_langganan()=="POS")
+                    @else
+                        <option value="1">{{ _lang('Barang Dengan Imei') }}</option>
+                    @endif
                     <option value="2" selected="selected">{{ _lang('Barang Dengan Stok') }}</option>
                     <option value="3">{{ _lang('Barang Tanpa Stok') }}</option>
                 </select>

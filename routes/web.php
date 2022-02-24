@@ -184,23 +184,14 @@ Route::group(['middleware' => ['install']], function () {
 			
 			//Report Controller
 			Route::match(['get', 'post'],'reports/orderpembelian_report/{view?}', 'ReportController@orderpembelian_report')->name('reports.orderpembelian_report');
-			Route::match(['get', 'post'],'reports/orderpembelian_isi/{view?}', 'ReportController@orderpembelian_isi')->name('reports.orderpembelian_isi');
 			Route::match(['get', 'post'],'reports/pembelian_report/{view?}', 'ReportController@pembelian_report')->name('reports.pembelian_report');
-			Route::match(['get', 'post'],'reports/pembelian_isi/{view?}', 'ReportController@pembelian_isi')->name('reports.pembelian_isi');
 			Route::match(['get', 'post'],'reports/persediaan_barang_report/{view?}', 'ReportController@persediaan_barang_report')->name('reports.persediaan_barang_report');
-			Route::match(['get', 'post'],'reports/persediaan_barang_isi/{view?}', 'ReportController@persediaan_barang_isi')->name('reports.persediaan_barang_isi');
 			Route::match(['get', 'post'],'reports/mutasi_stok_report/{view?}', 'ReportController@mutasi_stok_report')->name('reports.mutasi_stok_report');
-			Route::match(['get', 'post'],'reports/mutasi_stok_isi/{view?}', 'ReportController@mutasi_stok_isi')->name('reports.mutasi_stok_isi');
 			Route::match(['get', 'post'],'reports/quotation_report/{view?}', 'ReportController@quotation_report')->name('reports.quotation_report');
-			Route::match(['get', 'post'],'reports/quotation_isi/{view?}', 'ReportController@quotation_isi')->name('reports.quotation_isi');
 			Route::match(['get', 'post'],'reports/penjualan_report/{view?}', 'ReportController@penjualan_report')->name('reports.penjualan_report');
-			Route::match(['get', 'post'],'reports/penjualan_isi/{view?}', 'ReportController@penjualan_isi')->name('reports.penjualan_isi');
 			Route::match(['get', 'post'],'reports/returpembelian_report/{view?}', 'ReportController@returpembelian_report')->name('reports.returpembelian_report');
-			Route::match(['get', 'post'],'reports/returpembelian_isi/{view?}', 'ReportController@returpembelian_isi')->name('reports.returpembelian_isi');
 			Route::match(['get', 'post'],'reports/returpenjualan_report/{view?}', 'ReportController@returpenjualan_report')->name('reports.returpenjualan_report');
-			Route::match(['get', 'post'],'reports/returpenjualan_isi/{view?}', 'ReportController@returpenjualan_isi')->name('reports.returpenjualan_isi');
 			Route::match(['get', 'post'],'reports/laba_rugi_report/{view?}', 'ReportController@laba_rugi_report')->name('reports.laba_rugi_report');
-			Route::match(['get', 'post'],'reports/laba_rugi_isi/{view?}', 'ReportController@laba_rugi_isi')->name('reports.laba_rugi_isi');
 			
 			Route::match(['get', 'post'],'reports/account_statement/{view?}', 'ReportController@account_statement')->name('reports.account_statement');
 			Route::match(['get', 'post'],'reports/income_report/{view?}', 'ReportController@income_report')->name('reports.income_report');
@@ -231,7 +222,17 @@ Route::group(['middleware' => ['install']], function () {
 		Route::get('membership/paypal_payment_authorize/{order_id}/{payment_id}', 'MembershipController@paypal_payment_authorize')->name('membership.paypal_payment_authorize');
 		Route::post('membership/stripe_payment_authorize/{payment_id}', 'MembershipController@stripe_payment_authorize')->name('membership.stripe_payment_authorize');
 		Route::get('membership/transfer_payment_authorize/{payment_id}', 'MembershipController@transfer_payment_authorize')->name('membership.transfer_payment_authorize');
-	
+		
+		Route::match(['get', 'post'],'reports/orderpembelian_isi/{view?}', 'ReportController@orderpembelian_isi')->name('reports.orderpembelian_isi');
+		Route::match(['get', 'post'],'reports/pembelian_isi/{view?}', 'ReportController@pembelian_isi')->name('reports.pembelian_isi');
+		Route::match(['get', 'post'],'reports/persediaan_barang_isi/{view?}', 'ReportController@persediaan_barang_isi')->name('reports.persediaan_barang_isi');
+		Route::match(['get', 'post'],'reports/mutasi_stok_isi/{view?}', 'ReportController@mutasi_stok_isi')->name('reports.mutasi_stok_isi');
+		Route::match(['get', 'post'],'reports/laba_rugi_isi/{view?}', 'ReportController@laba_rugi_isi')->name('reports.laba_rugi_isi');
+		Route::match(['get', 'post'],'reports/quotation_isi/{view?}', 'ReportController@quotation_isi')->name('reports.quotation_isi');
+		Route::match(['get', 'post'],'reports/penjualan_isi/{view?}', 'ReportController@penjualan_isi')->name('reports.penjualan_isi');
+		Route::match(['get', 'post'],'reports/returpembelian_isi/{view?}', 'ReportController@returpembelian_isi')->name('reports.returpembelian_isi');
+		Route::match(['get', 'post'],'reports/returpenjualan_isi/{view?}', 'ReportController@returpenjualan_isi')->name('reports.returpenjualan_isi');
+											
     });
 
 });

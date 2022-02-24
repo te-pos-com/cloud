@@ -6,23 +6,23 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="icon" type="image/png" href="{{url('')}}/public/uploads/icon/favicon.png" />
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://cloud.serverxox.my.id/public/images/favicon.png" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="fonts/icomoon/style.css">
-<link rel="stylesheet" href="https://cloud.serverxox.my.id//public/css/owl.carousel.min.css">
-<link rel="stylesheet" href="https://cloud.serverxox.my.id//public/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cloud.serverxox.my.id//public/css/style2.css">
+<link rel="stylesheet" href="{{url('')}}/public/backend/assets/css/owl.carousel.min.css">
+<link rel="stylesheet" href="{{url('')}}/public/backend/assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{url('')}}/public/backend/assets/css/style2.css">
 <title>Login</title>
 </head>
 <body>
 <div class="d-lg-flex half">
-    <div class="bg order-1 order-md-2" style="background-image: url('https://cloud.serverxox.my.id/public/images/bg_1.jpg');"></div>
+<div class="bg order-1 order-md-2" style="background-image: url('{{url('')}}/public/backend/images/bg_1.webp');"></div>
         <div class="contents order-2 order-md-1">
             <div class="container">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-7">
-                    <h3>Login to<img src="https://cloud.serverxox.my.id/public/images/logo.png" width="150px" height="50px"></h3>
+                    <h3>Login to<img src="{{url('')}}/public/backend/images/logo.png" width="150px" height="50px"></h3>
                     <p class="mb-4">Aplikasi Kasir, Mudah digunakan.</p>
                     <div id="hasil"></div>
                         @if(Session::has('error'))
@@ -103,9 +103,10 @@
     </div>
 </div>
 
-<script src="https://cloud.serverxox.my.id//public/js/jquery-3.3.1.min.js"></script>
-<script src="https://cloud.serverxox.my.id//public/js/popper.min.js"></script>
-<script src="https://cloud.serverxox.my.id//public/js/bootstrap.min.js"></script>
-<script src="https://cloud.serverxox.my.id//public/js/main.js"></script>
+<script src="{{url('')}}/public/backend/assets/js/jquery-3.3.1.min.js"></script>
+<script src="{{url('')}}/public/backend/assets/js/popper.min.js"></script>
+<script src="{{url('')}}/public/backend/assets/js/bootstrap.min.js"></script>
+<script src="{{url('')}}/public/backend/assets/js/main.js"></script>
+
 </body>
 </html>

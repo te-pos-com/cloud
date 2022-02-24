@@ -66,10 +66,22 @@ class DashboardController extends Controller {
             $data['latest_income']         = Transaction::where("company_id", company_id())
                 ->where("dr_cr", "cr")
                 ->orderBy("id", "desc")->limit(5)->get();
+
+            $data['income_user']         = DB::select("SELECT u.name,sum(t.amount) as amount from transactions t 
+            INNER JOIN users u ON u.id=t.user_id where t.company_id=". company_id() ." and t.dr_cr='cr' order by amount desc LIMIT 5");
+
+            $data['income_produk']         = DB::select("SELECT i.item_name,sum(t.amount) as amount from transactions t
+            INNER JOIN invoice_items id on t.invoice_id =  id.invoice_id
+            INNER JOIN items i ON i.id=id.item_id where t.company_id=". company_id() ." and t.dr_cr='cr' LIMIT 5");
+
             $data['latest_expense'] = Transaction::where("company_id", company_id())
                 ->where("dr_cr", "dr")
                 ->orderBy("id", "desc")->limit(5)->get();
-            return view('backend/dashboard-' . $type, $data);
+            if (jenis_langganan()=="POS"){
+                return view('backend/dashboard_pos-' . $type, $data);
+            }else{
+                return view('backend/dashboard-' . $type, $data);
+            }
         }
     }
 
@@ -189,4 +201,16 @@ class DashboardController extends Controller {
         // Use for Permission Only
         return redirect()->route('dashboard');
     }
+
+    public function income_user(){
+        // Use for Permission Only
+        return redirect()->route('dashboard');
+    }
+
+    public function income_produk(){
+        // Use for Permission Only
+        return redirect()->route('dashboard');
+    }
+
+
 }

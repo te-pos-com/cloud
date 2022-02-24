@@ -78,9 +78,9 @@
     'normal' => $rootDir . '/lib/fonts/DejaVuSerif',
   ),
   'poppins' => array(
-    'normal' => $fontDir . '/poppins_normal_c1b7381dfaadf37a84cf14d786076e6d',
-    '500' => $fontDir . '/poppins_500_3ab22c79a50a7416f996a1aba688428d',
-    '600' => $fontDir . '/poppins_600_270e18a84ac8b306c8f31abe1d0720fa',
-    'bold' => $fontDir . '/poppins_bold_7eb29046bc7eaf66b896ec27702d038b',
+    'normal' => $fontDir . '/poppins_normal_a7d2460db3514249ea0808da6101365c',
+    '500' => $fontDir . '/poppins_500_1321f10338f0e66434dee30474b658c6',
+    '600' => $fontDir . '/poppins_600_b9eb07b2d5e0d6ec53e0c7454d6da738',
+    'bold' => $fontDir . '/poppins_bold_539ab661c3f4224a64ba7fb9f8385177',
   ),
 ) ?>

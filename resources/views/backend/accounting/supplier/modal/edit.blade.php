@@ -47,14 +47,7 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="control-label">{{ _lang('Country') }}</label>
-                <select class="form-control select2" name="country">
-                    {{ get_country_list($supplier->country) }}
-                </select>
-            </div>
-        </div>
+
 
         <div class="col-md-6">
             <div class="form-group">
@@ -76,7 +69,9 @@
                 <input type="text" class="form-control" name="postal_code" value="{{ $supplier->postal_code }}">
             </div>
         </div>
+        <div class="col-md-6">
 
+        </div>
 
         <div class="form-group">
             <div class="col-md-12">

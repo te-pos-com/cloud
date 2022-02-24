@@ -68,21 +68,40 @@ class InvoiceController extends Controller {
                 return invoice_status($invoice->status);
             })
             ->addColumn('action', function ($invoice) {
-                return '<div class="dropdown text-center">'
-                . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
-                . '&nbsp;<i class="fas fa-angle-down"></i></button>'
-                . '<div class="dropdown-menu">'
-                . '<a class="dropdown-item" href="' . action('InvoiceController@edit', $invoice->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a>'
-                . '<a class="dropdown-item" href="' . action('InvoiceController@show', $invoice->id) . '" data-title="' . _lang('View Invoice') . '" data-fullscreen="true"><i class="ti-eye"></i> ' . _lang('View') . '</a>'
-                . '<a href="' . route('invoices.create_payment', $invoice->id) . '" data-title="' . _lang('Make Payment') . '" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('Make Payment') . '</a>'
-                . '<a href="' . route('invoices.view_payment', $invoice->id) . '" data-title="' . _lang('View Payment') . '" data-fullscreen="true" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('View Payment') . '</a>'
-                . '<form action="' . action('InvoiceController@destroy', $invoice['id']) . '" method="post">'
-                . csrf_field()
-                . '<input name="_method" type="hidden" value="DELETE">'
-                . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
-                    . '</form>'
-                    . '</div>'
-                    . '</div>';
+                if (jenis_langganan()=="POS"){
+                    return '<div class="dropdown text-center">'
+                    . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
+                    . '&nbsp;<i class="fas fa-angle-down"></i></button>'
+                    . '<div class="dropdown-menu">'
+                    . '<a class="dropdown-item" href="' . action('InvoiceController@edit', $invoice->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a>'
+                    . '<a class="dropdown-item" href="' . action('InvoiceController@show', $invoice->id) . '" data-title="' . _lang('View Invoice') . '" data-fullscreen="true"><i class="ti-eye"></i> ' . _lang('View') . '</a>'
+                    . '<a href="' . route('invoices.create_payment', $invoice->id) . '" data-title="' . _lang('Make Payment') . '" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('Make Payment') . '</a>'
+                    . '<a href="' . route('invoices.view_payment', $invoice->id) . '" data-title="' . _lang('View Payment') . '" data-fullscreen="true" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('View Payment') . '</a>'
+                    . '<form action="' . action('InvoiceController@destroy', $invoice['id']) . '" method="post">'
+                    . csrf_field()
+                    . '<input name="_method" type="hidden" value="DELETE">'
+                    . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
+                        . '</form>'
+                        . '</div>'
+                        . '</div>';
+                }
+                else{
+                    return '<div class="dropdown text-center">'
+                    . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
+                    . '&nbsp;<i class="fas fa-angle-down"></i></button>'
+                    . '<div class="dropdown-menu">'
+                    . '<a class="dropdown-item" href="' . action('InvoiceController@edit', $invoice->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a>'
+                    . '<a class="dropdown-item" href="' . action('InvoiceController@show', $invoice->id) . '" data-title="' . _lang('View Invoice') . '" data-fullscreen="true"><i class="ti-eye"></i> ' . _lang('View') . '</a>'
+                    . '<a href="' . route('invoices.create_payment', $invoice->id) . '" data-title="' . _lang('Make Payment') . '" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('Make Payment') . '</a>'
+                    . '<a href="' . route('invoices.view_payment', $invoice->id) . '" data-title="' . _lang('View Payment') . '" data-fullscreen="true" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('View Payment') . '</a>'
+                    . '<form action="' . action('InvoiceController@destroy', $invoice['id']) . '" method="post">'
+                    . csrf_field()
+                    . '<input name="_method" type="hidden" value="DELETE">'
+                    . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
+                        . '</form>'
+                        . '</div>'
+                        . '</div>';
+                }
             })
             ->setRowId(function ($invoice) {
                 return "row_" . $invoice->id;
@@ -111,17 +130,31 @@ class InvoiceController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'invoice_number' => 'required|max:191',
-            'client_id'      => 'required',
-            'cabang_id'      => 'required',
-            'invoice_date'   => 'required',
-            'invoice_number' => 'required',
-            'due_date'       => 'required',
-            'product_id'     => 'required',
-        ], [
-            'product_id.required' => _lang('You must select at least one product or service'),
-        ]);
+        if (jenis_langganan()=="POS"){
+            $validator = Validator::make($request->all(), [
+                'invoice_number' => 'required|max:191',
+                'client_id'      => 'required',
+                'cabang_id'      => 'required',
+                'invoice_date'   => 'required',
+                'invoice_number' => 'required',
+                'product_id'     => 'required',
+            ], [
+                'product_id.required' => _lang('You must select at least one product or service'),
+            ]);
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'invoice_number' => 'required|max:191',
+                'client_id'      => 'required',
+                'cabang_id'      => 'required',
+                'invoice_date'   => 'required',
+                'invoice_number' => 'required',
+                'due_date'       => 'required',
+                'product_id'     => 'required',
+            ], [
+                'product_id.required' => _lang('You must select at least one product or service'),
+            ]);
+        }
 
         if ($validator->fails()) {
             if ($request->ajax()) {
@@ -135,18 +168,32 @@ class InvoiceController extends Controller {
 
         DB::beginTransaction();
 
-        $invoice                 = new Invoice();
-        $invoice->invoice_number = $request->input('invoice_number');
-        $invoice->client_id      = $request->input('client_id');
-        $invoice->cabang_id      = $request->input('cabang_id');
-        $invoice->invoice_date   = $request->input('invoice_date');
-        $invoice->due_date       = $request->input('due_date');
-        $invoice->grand_total    = $request->product_total + $request->tax_total;
-        $invoice->tax_total      = $request->input('tax_total');
-        $invoice->paid           = 0;
-        $invoice->status         = $request->input('status');
-        $invoice->note           = $request->input('note');
-
+        if (jenis_langganan()=="POS"){
+            $invoice                 = new Invoice();
+            $invoice->invoice_number = $request->input('invoice_number');
+            $invoice->client_id      = $request->input('client_id');
+            $invoice->cabang_id      = $request->input('cabang_id');
+            $invoice->invoice_date   = $request->input('invoice_date');
+            $invoice->due_date       = $request->input('invoice_date');
+            $invoice->grand_total    = $request->product_total + $request->tax_total;
+            $invoice->tax_total      = $request->input('tax_total');
+            $invoice->paid           = 0;
+            $invoice->status         = "Unpaid";
+            $invoice->note           = $request->input('note');    
+        }else{
+            $invoice                 = new Invoice();
+            $invoice->invoice_number = $request->input('invoice_number');
+            $invoice->client_id      = $request->input('client_id');
+            $invoice->cabang_id      = $request->input('cabang_id');
+            $invoice->invoice_date   = $request->input('invoice_date');
+            $invoice->due_date       = $request->input('due_date');
+            $invoice->grand_total    = $request->product_total + $request->tax_total;
+            $invoice->tax_total      = $request->input('tax_total');
+            $invoice->paid           = 0;
+            $invoice->status         = $request->input('status');
+            $invoice->note           = $request->input('note');    
+        }
+        $invoice->user_id = user_id();
         $invoice->save();
 
         $taxes = Tax::all();
@@ -274,16 +321,29 @@ class InvoiceController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        $validator = Validator::make($request->all(), [
-            'invoice_number' => 'required|max:191',
-            'client_id'      => 'required',
-            'cabang_id'      => 'required',
-            'invoice_date'   => 'required',
-            'due_date'       => 'required',
-            'product_id'     => 'required',
-        ], [
-            'product_id.required' => _lang('You must select at least one product or service'),
-        ]);
+        if (jenis_langganan()=="POS"){
+            $validator = Validator::make($request->all(), [
+                'invoice_number' => 'required|max:191',
+                'client_id'      => 'required',
+                'cabang_id'      => 'required',
+                'invoice_date'   => 'required',
+                'product_id'     => 'required',
+            ], [
+                'product_id.required' => _lang('You must select at least one product or service'),
+            ]);
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'invoice_number' => 'required|max:191',
+                'client_id'      => 'required',
+                'cabang_id'      => 'required',
+                'invoice_date'   => 'required',
+                'due_date'       => 'required',
+                'product_id'     => 'required',
+            ], [
+                'product_id.required' => _lang('You must select at least one product or service'),
+            ]);
+        }
 
         if ($validator->fails()) {
             if ($request->ajax()) {
@@ -296,17 +356,30 @@ class InvoiceController extends Controller {
         }
 
         DB::beginTransaction();
-
-        $invoice                 = Invoice::find($id);
-        $invoice->invoice_number = $request->input('invoice_number');
-        $invoice->client_id      = $request->input('client_id');
-        $invoice->cabang_id      = $request->input('cabang_id');
-        $invoice->invoice_date   = $request->input('invoice_date');
-        $invoice->due_date       = $request->input('due_date');
-        $invoice->grand_total    = $request->product_total + $request->tax_total;
-        $invoice->tax_total      = $request->input('tax_total');
-        $invoice->status         = $request->input('status');
-        $invoice->note           = $request->input('note');
+        if (jenis_langganan()=="POS"){
+            $invoice                 = Invoice::find($id);
+            $invoice->invoice_number = $request->input('invoice_number');
+            $invoice->client_id      = $request->input('client_id');
+            $invoice->cabang_id      = $request->input('cabang_id');
+            $invoice->invoice_date   = $request->input('invoice_date');
+            $invoice->grand_total    = $request->product_total + $request->tax_total;
+            $invoice->paid           = $request->product_total + $request->tax_total;
+            $invoice->tax_total      = $request->input('tax_total');
+            $invoice->note           = $request->input('note');
+        }
+        else{
+            $invoice                 = Invoice::find($id);
+            $invoice->invoice_number = $request->input('invoice_number');
+            $invoice->client_id      = $request->input('client_id');
+            $invoice->cabang_id      = $request->input('cabang_id');
+            $invoice->invoice_date   = $request->input('invoice_date');
+            $invoice->due_date       = $request->input('due_date');
+            $invoice->grand_total    = $request->product_total + $request->tax_total;
+            $invoice->tax_total      = $request->input('tax_total');
+            $invoice->status         = $request->input('status');
+            $invoice->note           = $request->input('note');
+        }
+        $invoice->user_id_update = user_id();
 
         $invoice->save();
 
@@ -447,6 +520,11 @@ class InvoiceController extends Controller {
         $invoice = Invoice::find($id);
         $invoice->delete();
 
+        $transaksi = Transaction::where("invoice_id",$id);
+        if ($transaksi){
+            $transaksi->delete();
+        }
+
         $invoiceItems = InvoiceItem::where("invoice_id", $id)->get();
         foreach ($invoiceItems as $p_item) {
             $invoiceItem = InvoiceItem::find($p_item->id);
@@ -486,16 +564,25 @@ class InvoiceController extends Controller {
                 return view('backend.accounting.invoice.modal.create_payment', compact('invoice', 'id'));
             }
         } else if ($request->isMethod('post')) {
-            $validator = Validator::make($request->all(), [
-                'invoice_id'        => 'required',
-                'account_id'        => 'required',
-                'chart_id'          => 'required',
-                'amount'            => 'required|numeric',
-                'payment_method_id' => 'required',
-                'reference'         => 'nullable|max:50',
-                'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
-            ]);
-
+            if(jenis_langganan()=="POS"){
+                $validator = Validator::make($request->all(), [
+                    'invoice_id'        => 'required',
+                    'amount'            => 'required|numeric',
+                    'payment_method_id' => 'required',
+                    'reference'         => 'nullable|max:50',
+                    'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+                ]);
+            }else{
+                $validator = Validator::make($request->all(), [
+                    'invoice_id'        => 'required',
+                    'account_id'        => 'required',
+                    'chart_id'          => 'required',
+                    'amount'            => 'required|numeric',
+                    'payment_method_id' => 'required',
+                    'reference'         => 'nullable|max:50',
+                    'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+                ]);
+            }
             if ($validator->fails()) {
                 if ($request->ajax()) {
                     return response()->json(['result' => 'error', 'message' => $validator->errors()->all()]);
@@ -517,20 +604,34 @@ class InvoiceController extends Controller {
                 $file->move(public_path() . "/uploads/transactions/", $attachment);
             }
 
-            $transaction                    = new Transaction();
-            $transaction->trans_date        = date('Y-m-d');
-            $transaction->account_id        = $request->input('account_id');
-            $transaction->chart_id          = $request->input('chart_id');
-            $transaction->type              = 'income';
-            $transaction->dr_cr             = 'cr';
-            $transaction->amount            = $request->input('amount');
-            $transaction->payer_payee_id    = $request->input('client_id');
-            $transaction->payment_method_id = $request->input('payment_method_id');
-            $transaction->invoice_id        = $request->input('invoice_id');
-            $transaction->reference         = $request->input('reference');
-            $transaction->note              = $request->input('note');
-            $transaction->attachment        = $attachment;
-
+            if (jenis_langganan()=="POS"){
+                $transaction                    = new Transaction();
+                $transaction->trans_date        = date('Y-m-d');
+                $transaction->type              = 'income';
+                $transaction->dr_cr             = 'cr';
+                $transaction->amount            = $request->input('amount');
+                $transaction->payer_payee_id    = $request->input('client_id');
+                $transaction->payment_method_id = $request->input('payment_method_id');
+                $transaction->invoice_id        = $request->input('invoice_id');
+                $transaction->reference         = $request->input('reference');
+                $transaction->note              = $request->input('note');
+                $transaction->attachment        = $attachment;
+            }else{
+                $transaction                    = new Transaction();
+                $transaction->trans_date        = date('Y-m-d');
+                $transaction->account_id        = $request->input('account_id');
+                $transaction->chart_id          = $request->input('chart_id');
+                $transaction->type              = 'income';
+                $transaction->dr_cr             = 'cr';
+                $transaction->amount            = $request->input('amount');
+                $transaction->payer_payee_id    = $request->input('client_id');
+                $transaction->payment_method_id = $request->input('payment_method_id');
+                $transaction->invoice_id        = $request->input('invoice_id');
+                $transaction->reference         = $request->input('reference');
+                $transaction->note              = $request->input('note');
+                $transaction->attachment        = $attachment;
+            }
+            $transaction->user_id        = user_id();
             $transaction->save();
 
             //Update Invoice Table

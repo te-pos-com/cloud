@@ -55,12 +55,17 @@
 
                         <b>{{ _lang('Invoice Date') }}:</b>
                         {{ $invoice->invoice_date }}<br>
-
-                        <b>{{ _lang('Due Date') }}:</b>
-                        {{ $invoice->due_date }}<br>
-
+                        @if (jenis_langganan()=="POS")
+                        @else
+                            <b>{{ _lang('Due Date') }}:</b>
+                            {{ $invoice->due_date }}<br>
+                        @endif
                         <b>{{ _lang('Payment Status') }}:</b>
-                        {{ _dlang(str_replace('_',' ',$invoice->status)) }}<br>
+                        @if ($invoice->status=="Paid")                                        
+                            <span class="badge badge-success">{{ _lang('Lunas') }}</span><br>
+                        @else
+                            <span class="badge badge-danger">{{ _lang('Belum Lunas') }}</span><br>
+                        @endif
                     </td>
                 </tr>
             </tbody>
@@ -145,11 +150,10 @@
             <table class="table table-bordered" id="invoice-payment-history-table">
                 <thead class="base_color">
                     <tr>
-                        <td colspan="4" class="text-center"><b>{{ _lang('Payment History') }}</b></td>
+                        <td colspan="3" class="text-center"><b>{{ _lang('Payment History') }}</b></td>
                     </tr>
                     <tr>
                         <th>{{ _lang('Date') }}</th>
-                        <th>{{ _lang('Account') }}</th>
                         <th class="text-right">{{ _lang('Amount') }}</th>
                         <th>{{ _lang('Payment Method') }}</th>
                     </tr>
@@ -158,8 +162,6 @@
                     @foreach($transactions as $transaction)
                     <tr id="transaction-{{ $transaction->id }}">
                         <td>{{ $transaction->trans_date }}</td>
-                        <td>{{ $transaction->account->account_title }}
-                        </td>
                         <td class="text-right">{!! strip_tags(decimalPlace($transaction->amount, $currency)) !!}</td>
                         <td>{{ $transaction->payment_method->name }}</td>
                     </tr>

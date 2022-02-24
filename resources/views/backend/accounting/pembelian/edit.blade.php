@@ -75,6 +75,8 @@
                             </div>
                         </div>
 
+                        @if(jenis_langganan()=="POS")
+                        @else
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label">{{ _lang('Payment Status') }}</label>
@@ -86,7 +88,7 @@
                                 </select>
                             </div>
                         </div>
-
+                        @endif
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label">{{ _lang('Attachemnt') }}</label>

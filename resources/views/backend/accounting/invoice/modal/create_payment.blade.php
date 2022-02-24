@@ -1,33 +1,34 @@
 <form method="post" class="ajax-submit" autocomplete="off" action="{{ route('invoices.create_payment') }}"
     enctype="multipart/form-data">
     {{ csrf_field() }}
-
     <div class="row p-2">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="control-label">{{ _lang('Credit Account') }}</label>
-                <select class="form-control select2" name="account_id" required>
-                    <option value="">{{ _lang('Select One') }}</option>
-                    {{ create_option("accounts","id","account_title",old('account_id'),array("jenis=" => "D"," and company_id=" => company_id()))}}
-                </select>
+        @if (jenis_langganan()=="POS")
+        @else
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">{{ _lang('Credit Account') }}</label>
+                    <select class="form-control select2" name="account_id" required>
+                        <option value="">{{ _lang('Select One') }}</option>
+                        {{ create_option("accounts","id","account_title",old('account_id'),array("jenis=" => "D"," and company_id=" => company_id()))}}
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="control-label">{{ _lang('Income Type') }}</label>
-                <select class="form-control select2" name="chart_id" required>
-                    <option value="">{{ _lang('Select One') }}</option>
-                    {{ create_option("chart_of_accounts","id","name",old('chart_id'),array("type="=>"income","AND company_id="=>company_id())) }}
-                </select>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">{{ _lang('Income Type') }}</label>
+                    <select class="form-control select2" name="chart_id" required>
+                        <option value="">{{ _lang('Select One') }}</option>
+                        {{ create_option("chart_of_accounts","id","name",old('chart_id'),array("type="=>"income","AND company_id="=>company_id())) }}
+                    </select>
+                </div>
             </div>
-        </div>
-
+        @endif
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">{{ _lang('Pending Amount')." ".currency() }}</label>
                 <input type="text" class="form-control float-field"
-                    value="{{ ($invoice->grand_total - $invoice->paid) }}" readOnly="true">
+                    value="{{ decimalPlace($invoice->grand_total - $invoice->paid) }}" readOnly="true">
             </div>
         </div>
 

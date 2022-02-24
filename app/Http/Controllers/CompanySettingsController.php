@@ -15,7 +15,11 @@ class CompanySettingsController extends Controller {
 
     public function settings($store = "", Request $request) {
         if ($store == "") {
-            return view('backend.accounting.general_settings.settings');
+            if (jenis_langganan()=="POS"){
+                return view('backend.accounting.general_settings.settings_pos');
+            }else{
+                return view('backend.accounting.general_settings.settings');
+            }
         } else {
 
             $company_id = company_id();

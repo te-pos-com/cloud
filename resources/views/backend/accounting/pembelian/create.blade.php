@@ -30,10 +30,10 @@
                             <div class="form-group">
                                 <label class="control-label">{{ _lang('Invoice Number') }}</label>
                                 <input type="text" class="form-control" name="invoice_number"
-                                    value="{{ old('invoice_number',get_company_option('invoice_retur_pembelian_perfix').get_company_option('invoice_retur_pembelian')) }}"
+                                    value="{{ old('invoice_number',get_company_option('invoice_pembelian_perfix').get_company_option('invoice_retur_pembelian')) }}"
                                     required>
-                                <input type="hidden" name="invoice_retur_pembelian"
-                                    value="{{ get_company_option('invoice_retur_pembelian') }}">
+                                <input type="hidden" name="invoice_pembelian"
+                                    value="{{ get_company_option('invoice_pembelian') }}">
                             </div>
                         </div>
                         
@@ -87,6 +87,8 @@
                                 </select>
                             </div>
                         </div>
+                        @if (jenis_langganan()=="POS")
+                        @else
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">{{ _lang('Purchase Order') }}</label>
@@ -97,7 +99,7 @@
                                 </select>
                             </div>
                         </div>
-
+                        @endif
 
                         <!--Order table -->
                         <div class="col-md-12">

@@ -61,15 +61,6 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="control-label">{{ _lang('Country') }}</label>
-                                <select class="form-control select2" name="country">
-                                    {{ get_country_list( old('country') ) }}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label class="control-label">{{ _lang('Group') }}</label>
                                 <select class="form-control select2" name="group_id">
                                     <option value="">{{ _lang('- Select Group -') }}</option>
@@ -156,7 +147,8 @@
                     </div>
                 </div>
             </div>
-
+            @if (jenis_langganan()=="POS")
+            @else
             <div class="card">
                 <div class="card-header">
                     <div class="togglebutton">
@@ -208,6 +200,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
 
         <div class="col-md-12 mt-4">

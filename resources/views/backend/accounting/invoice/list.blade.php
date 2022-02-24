@@ -33,7 +33,8 @@
 							{{ create_option('contacts','id','contact_name','',array('company_id=' => company_id())) }}
                      	</select>
                     </div>	
-					
+					@if (jenis_langganan()=="POS")
+                    @else
                     <div class="col-lg-3 mb-2">
                      	<label>{{ _lang('Status') }}</label>
                      	<select class="form-control select2 select-filter" data-placeholder="{{ _lang('Invoice Status') }}" name="status" multiple="true">
@@ -42,7 +43,8 @@
 							<option value="Partially_Paid">{{ _lang('Partially Paid') }}</option>
 							<option value="Canceled">{{ _lang('Canceled') }}</option>
                      	</select>
-                    </div>	
+                    </div>
+                    @endif	
 
                     <div class="col-lg-3">
                      	<label>{{ _lang('Date Range') }}</label>
@@ -56,7 +58,7 @@
                     <thead>
                         <tr>
                             <th>{{ _lang('Invoice Number') }}</th>
-                            <th>{{ _lang('Client') }}</th>
+                            <th>{{ _lang('Pelanggan') }}</th>
                             <th>{{ _lang('Invoice Date') }}</th>
                             <th>{{ _lang('Due Date') }}</th>
                             <th class="text-right">{{ _lang('Grand Total') }}</th>

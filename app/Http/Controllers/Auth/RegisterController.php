@@ -80,8 +80,8 @@ class RegisterController extends Controller {
             'membership_type'   => 'trial',
             'profile_picture'   => 'default.png',
             'email'             => $data['email'],
-            'jenis_langganan'   => "POS",
-            'cabang'            => 1,
+            'jenis_langganan'   => $data['jenis_langganan'],
+            'cabang'            => $data['cabang'],
             'password'          => Hash::make($data['password']),
         ]);
 

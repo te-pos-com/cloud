@@ -59,7 +59,7 @@
                                 <a href="{{ route('contacts.create') }}" data-reload="false"
                                     data-title="{{ _lang('Add Client') }}" class="ajax-modal select2-add"><i
                                         class="ti-plus"></i> {{ _lang('Add New') }}</a>
-                                <label class="control-label">{{ _lang('Select Client') }}</label>
+                                <label class="control-label">{{ _lang('Pilih Pelanggan') }}</label>
                                 <select class="form-control select2-ajax" data-value="id" data-display="contact_name"
                                     data-table="contacts" data-where="1" name="client_id" id="client_id" required>
                                     <option value="">{{ _lang('Select One') }}</option>
@@ -67,26 +67,28 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Due Date') }}</label>
-                                <input type="text" class="form-control datepicker" name="due_date"
-                                    value="{{ old('due_date') }}" required>
+                        @if (jenis_langganan()=="POS")
+                        @else
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Due Date') }}</label>
+                                    <input type="text" class="form-control datepicker" name="due_date"
+                                        value="{{ old('due_date') }}" required>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Status') }}</label>
-                                <select class="form-control select2" name="status">
-                                    <option value="Unpaid">{{ _lang('Unpaid') }}</option>
-                                    <option value="Paid">{{ _lang('Paid') }}</option>
-                                    <option value="Partially_Paid">{{ _lang('Partially Paid') }}</option>
-                                    <option value="Canceled">{{ _lang('Canceled') }}</option>
-                                </select>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Status') }}</label>
+                                    <select class="form-control select2" name="status">
+                                        <option value="Unpaid">{{ _lang('Unpaid') }}</option>
+                                        <option value="Paid">{{ _lang('Paid') }}</option>
+                                        <option value="Partially_Paid">{{ _lang('Partially Paid') }}</option>
+                                        <option value="Canceled">{{ _lang('Canceled') }}</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-
+                        @endif
                         <div class="col-md-6">
                             <div class="form-group select-product-container">
                                 <a href="{{ route('products.create') }}" data-reload="false"
@@ -100,18 +102,21 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group select-product-container">
-                                <a href="{{ route('services.create') }}" data-reload="false"
-                                    data-title="{{ _lang('Add Service') }}" class="ajax-modal select2-add"><i
-                                        class="ti-plus"></i> {{ _lang('Add New') }}</a>
-                                <label class="control-label">{{ _lang('Select Service') }}</label>
-                                <select class="form-control select2-ajax" data-value="id" data-display="item_name"
-                                    data-table="items" data-where="5" name="service" id="service">
-                                    <option value="">{{ _lang('Select Service') }}</option>
-                                </select>
+                        @if (jenis_langganan()=="POS")
+                        @else
+                            <div class="col-md-6">
+                                <div class="form-group select-product-container">
+                                    <a href="{{ route('services.create') }}" data-reload="false"
+                                        data-title="{{ _lang('Add Service') }}" class="ajax-modal select2-add"><i
+                                            class="ti-plus"></i> {{ _lang('Add New') }}</a>
+                                    <label class="control-label">{{ _lang('Select Service') }}</label>
+                                    <select class="form-control select2-ajax" data-value="id" data-display="item_name"
+                                        data-table="items" data-where="5" name="service" id="service">
+                                        <option value="">{{ _lang('Select Service') }}</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @endif
 
                         <!--Order table -->
                         @php $currency = currency(); @endphp

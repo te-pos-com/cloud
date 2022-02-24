@@ -29,9 +29,8 @@ trait RegistersUsers
      */
     public function register(Request $request)
     {
-        return $request;
         $this->validator($request->all())->validate();
-
+        //return ($request->all());
         event(new Registered($user = $this->create($request->all())));
 
         $this->guard()->login($user);
