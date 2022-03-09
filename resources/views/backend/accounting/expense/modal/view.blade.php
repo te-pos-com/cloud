@@ -3,10 +3,13 @@
         <td>{{ _lang('Trans Date') }}</td>
         <td>{{ $transaction->trans_date }}</td>
     </tr>
-    <tr>
-        <td>{{ _lang('Account') }}</td>
-        <td>{{ $transaction->account->account_title }}</td>
-    </tr>
+    @if(jenis_langganan()=="POS")
+    @else
+        <tr>
+            <td>{{ _lang('Account') }}</td>
+            <td>{{ $transaction->account->account_title }}</td>
+        </tr>
+    @endif
     <tr>
         <td>{{ _lang('Expense Type') }}</td>
         <td>{{ isset($transaction->expense_type->name) ? $transaction->expense_type->name : _lang('Transfer') }}

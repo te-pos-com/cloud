@@ -76,6 +76,18 @@
                         </div>
 
                         @if(jenis_langganan()=="POS")
+                        @elseif (jenis_langganan()=="TRADING")
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Payment Status') }}</label>
+                                    <select class="form-control select2" name="payment_status" required>
+                                        <option value="1" {{ $pembelian->payment_status == '0' ? 'selected' : '' }}>
+                                            {{ _lang('Due') }}</option>
+                                        <option value="2" {{ $pembelian->payment_status == '1' ? 'selected' : '' }}>
+                                            {{ _lang('Paid') }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         @else
                         <div class="col-md-4">
                             <div class="form-group">

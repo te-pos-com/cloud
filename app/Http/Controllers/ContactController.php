@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Validator;
+use DB;
 
 class ContactController extends Controller {
 
@@ -104,6 +105,8 @@ class ContactController extends Controller {
                     ->withInput();
             }
         }
+
+        DB::select("ALTER TABLE contacts AUTO_INCREMENT=0");
 
         $contact_image = "avatar.png";
         if ($request->hasfile('contact_image')) {

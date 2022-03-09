@@ -33,17 +33,18 @@
 							{{ create_option('contacts','id','contact_name','',array('company_id=' => company_id())) }}
                      	</select>
                     </div>	
-					@if (jenis_langganan()=="POS")
+					@if (jenis_langganan()=="POS" || jenis_langganan()=="TRADING")
+                   
                     @else
-                    <div class="col-lg-3 mb-2">
-                     	<label>{{ _lang('Status') }}</label>
-                     	<select class="form-control select2 select-filter" data-placeholder="{{ _lang('Invoice Status') }}" name="status" multiple="true">
-							<option value="Unpaid">{{ _lang('Unpaid') }}</option>
-							<option value="Paid">{{ _lang('Paid') }}</option>
-							<option value="Partially_Paid">{{ _lang('Partially Paid') }}</option>
-							<option value="Canceled">{{ _lang('Canceled') }}</option>
-                     	</select>
-                    </div>
+                        <div class="col-lg-3 mb-2">
+                            <label>{{ _lang('Status') }}</label>
+                            <select class="form-control select2 select-filter" data-placeholder="{{ _lang('Invoice Status') }}" name="status" multiple="true">
+                                <option value="Unpaid">{{ _lang('Unpaid') }}</option>
+                                <option value="Paid">{{ _lang('Paid') }}</option>
+                                <option value="Partially_Paid">{{ _lang('Partially Paid') }}</option>
+                                <option value="Canceled">{{ _lang('Canceled') }}</option>
+                            </select>
+                        </div>
                     @endif	
 
                     <div class="col-lg-3">

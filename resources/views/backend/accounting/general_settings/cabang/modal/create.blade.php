@@ -17,7 +17,7 @@
         </div>
         <div class="form-group">
             <label class="control-label">{{ _lang('Cabang Alamat') }}</label>
-            <input type="text" class="form-control" name="cabang_alamat" value="{{ old('cabang_alamat') }}" required>
+            <input type="text" class="form-control" name="cabang_alamat" value="{{ old('cabang_alamat') }}">
         </div>
     </div>
 

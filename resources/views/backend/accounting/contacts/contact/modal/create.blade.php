@@ -47,16 +47,6 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="control-label">{{ _lang('Country') }}</label>
-                    <select class="form-control select2" name="country">
-                        <option value="">{{ _lang('Select Country') }}</option>
-                        {{ get_country_list( old('country') ) }}
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
                     <a href="{{ route('contact_groups.create') }}" data-reload="false"
                         data-title="{{ _lang('Add Contact Group') }}" class="ajax-modal-2 select2-add"><i
                             class="ti-plus"></i> {{ _lang('Add New') }}</a>

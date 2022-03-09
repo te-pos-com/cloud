@@ -3,6 +3,7 @@
     {{ csrf_field() }}
     <div class="row p-2">
         @if (jenis_langganan()=="POS")
+        @elseif (jenis_langganan()=="TRADING")
         @else
             <div class="col-md-6">
                 <div class="form-group">
@@ -52,7 +53,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">{{ _lang('Reference') }}</label>
-                <input type="text" class="form-control" name="reference" value="{{ old('reference') }}">
+                <input type="text" class="form-control" name="reference" value="{{ $invoice->invoice_number }}">
             </div>
         </div>
 

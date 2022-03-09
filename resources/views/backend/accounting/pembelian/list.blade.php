@@ -28,16 +28,16 @@
                             {{ create_option('cabang','id','cabang_name','',array('company_id=' => company_id())) }}
                         </select>
                     </div>
-                    @if (jenis_langganan()=="POS")
+                    @if (jenis_langganan()=="POS" || jenis_langganan()=="TRADING")
                     @else
-                    <div class="col-lg-3 mb-2">
-                        <label>{{ _lang('Payment Status') }}</label>
-                        <select class="form-control select2 select-filter"
-                            data-placeholder="{{ _lang('Payment Status') }}" name="payment_status" multiple="true">
-                            <option value="1">{{ _lang('Paid') }}</option>
-                            <option value="0">{{ _lang('UnPaid') }}</option>
-                        </select>
-                    </div>
+                        <div class="col-lg-3 mb-2">
+                            <label>{{ _lang('Payment Status') }}</label>
+                            <select class="form-control select2 select-filter"
+                                data-placeholder="{{ _lang('Payment Status') }}" name="payment_status" multiple="true">
+                                <option value="1">{{ _lang('Paid') }}</option>
+                                <option value="0">{{ _lang('UnPaid') }}</option>
+                            </select>
+                        </div>
                     @endif
                     <div class="col-lg-3">
                         <label>{{ _lang('Rentang Tanggal Pembelian') }}</label>

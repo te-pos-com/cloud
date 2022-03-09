@@ -23,7 +23,7 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-7">
                     <h3>Login to<img src="{{url('')}}/public/backend/images/logo.png" width="150px" height="50px"></h3>
-                    <p class="mb-4">Aplikasi Kasir, Mudah digunakan.</p>
+                    <p class="mb-4">Program Kasir,Inventory,Keuangan,Accounting.</p>
                     <div id="hasil"></div>
                         @if(Session::has('error'))
                             <div class="alert alert-danger text-center">

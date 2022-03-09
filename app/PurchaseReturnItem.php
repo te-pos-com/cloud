@@ -24,4 +24,9 @@ class PurchaseReturnItem extends Model
     {
         return $this->hasMany('App\PurchaseReturnItemTax',"purchase_return_item_id");
     }
+
+    public function gudang()
+    {
+        return $this->hasOne('App\Gudang',"id","gudang_id")->withDefault();
+    }
 }

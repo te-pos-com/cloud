@@ -148,6 +148,8 @@
                 </div>
             </div>
             @if (jenis_langganan()=="POS")
+            @elseif (jenis_langganan()=="TRADING")
+            
             @else
             <div class="card">
                 <div class="card-header">

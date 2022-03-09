@@ -99,6 +99,22 @@ if (!function_exists('jenis_langganan')) {
     }
 }
 
+if (!function_exists('cabang_aktif')) {
+    function cabang_aktif() {
+        if (Auth::check()) {
+            if (Auth::user()->user_type == 'admin') {
+                return 0;
+            }
+            else{
+                $user_cabang = \App\Cabang::where("company_id",company_id())->get()->toArray();
+                return count($user_cabang);
+                //return company_id();
+            }
+        }
+
+    }
+}
+
 if (!function_exists('cabang')) {
     function cabang() {
         if (Auth::check()) {
@@ -742,7 +758,7 @@ if (!function_exists('current_day_income')) {
         $date       = date("Y-m-d");
 
         $query = DB::select("SELECT IFNULL(SUM(amount),0) as total FROM transactions
-		WHERE trans_date='$date' AND dr_cr='cr' AND company_id='$company_id'");
+		WHERE trans_date='$date' AND dr_cr='cr' AND company_id='$company_id' AND invoice_id != ''");
         return $query[0]->total;
     }
 }
@@ -766,6 +782,7 @@ if (!function_exists('current_month_income')) {
 
         $monthly_income = \App\Transaction::selectRaw("IFNULL(SUM(amount),0) as total")
             ->where("dr_cr", "cr")
+            ->whereNotIn("invoice_id",[''])
             ->where("company_id", $company_id)
             ->whereMonth("trans_date", $month)
             ->whereYear("trans_date", $year)

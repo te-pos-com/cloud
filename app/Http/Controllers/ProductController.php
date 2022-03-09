@@ -9,6 +9,7 @@ use App\ProductMerek;
 use App\Stock;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
 
 class ProductController extends Controller {
 
@@ -70,8 +71,8 @@ class ProductController extends Controller {
         }
 
 
-
-
+		DB::select("ALTER TABLE items AUTO_INCREMENT=0");
+		DB::select("ALTER TABLE products AUTO_INCREMENT=0");
         //Create Item
         $item            = new Item();
         $item->item_name = $request->input('item_name');

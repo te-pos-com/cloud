@@ -6,6 +6,7 @@ use App\Gudang;
 use App\Cabang;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
 
 class GudangController extends Controller {
 
@@ -53,7 +54,7 @@ class GudangController extends Controller {
                     ->withInput();
             }
         }
-
+        DB::select("ALTER TABLE gudang AUTO_INCREMENT=0");
         $gudang = new Gudang();
         $gudang->gudang_name = $request->input('gudang_name');
         $gudang->cabang_id = $request->input('cabang_id');

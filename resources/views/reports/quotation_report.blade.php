@@ -77,6 +77,4 @@
 @endsection
 
 
-@section('js-script')
 <script src="{{ asset('public/backend/assets/js/datatables/quotation-table-report.js?v=1.1') }}"></script>
-@endsection

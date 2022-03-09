@@ -6,6 +6,9 @@
             <tr>
                 <th>{{ _lang('Date') }}</th>
                 @if(jenis_langganan()=="POS")
+                @elseif (jenis_langganan()=="TRADING")
+                    <th>{{ _lang('Account') }}</th>
+                    <th>{{ _lang('Income Type') }}</th>
                 @else
                     <th>{{ _lang('Account') }}</th>
                     <th>{{ _lang('Income Type') }}</th>
@@ -22,6 +25,9 @@
             <tr id="transaction-{{ $transaction->id }}">
                 <td>{{ $transaction->trans_date }}</td>
                 @if(jenis_langganan()=="POS")
+                @elseif(jenis_langganan()=="TRADING")
+                    <td>{{ $transaction->account->account_title }}</td>
+                    <td>{{ $transaction->income_type->name }}</td>
                 @else
                     <td>{{ $transaction->account->account_title }}</td>
                     <td>{{ $transaction->income_type->name }}</td>

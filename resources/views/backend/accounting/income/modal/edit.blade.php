@@ -12,6 +12,8 @@
             </div>
         </div>
 
+        @if (jenis_langganan()=="POS" ||  jenis_langganan()=="TRADING")
+        @else
         <div class="col-md-6">
             <div class="form-group">
                 <a href="{{ route('accounts.create') }}" data-reload="false" data-title="{{ _lang('Create Account') }}"
@@ -24,7 +26,6 @@
                 </select>
             </div>
         </div>
-
         <div class="col-md-6">
             <div class="form-group">
                 <a href="{{ route('chart_of_accounts.create') }}" data-reload="false"
@@ -38,7 +39,7 @@
                 </select>
             </div>
         </div>
-
+        @endif
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">{{ _lang('Amount')." ".currency() }}</label>

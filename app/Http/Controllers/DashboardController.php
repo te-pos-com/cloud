@@ -79,6 +79,9 @@ class DashboardController extends Controller {
                 ->orderBy("id", "desc")->limit(5)->get();
             if (jenis_langganan()=="POS"){
                 return view('backend/dashboard_pos-' . $type, $data);
+            }
+            elseif (jenis_langganan()=="TRADING"){
+                return view('backend/dashboard_trading-' . $type, $data);
             }else{
                 return view('backend/dashboard-' . $type, $data);
             }
@@ -88,10 +91,14 @@ class DashboardController extends Controller {
     public function json_month_wise_income_expense() {
         $income  = $this->get_month_wise_income();
         $expense = $this->get_month_wise_expense();
+        $incomereturn  = $this->get_month_wise_expensereturn();
+        $expensereturn = $this->get_month_wise_incomereturn();
 
         $months         = '"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"';
         $income_string  = '';
         $expense_string = '';
+        $incomereturn_string  = '';
+        $expensereturn_string = '';
 
         foreach ($income as $i) {
             $income_string = $income_string . $i->amount . ",";
@@ -104,7 +111,19 @@ class DashboardController extends Controller {
         }
         $expense_string = rtrim($expense_string, ",");
 
-        echo '{"Months":[' . $months . '], "Income":[' . $income_string . '], "Expense":[' . $expense_string . ']}';
+
+        foreach ($incomereturn as $ia) {
+            $incomereturn_string = $incomereturn_string . $ia->amount . ",";
+        }
+
+        $incomereturn_string = rtrim($incomereturn_string, ",");
+
+        foreach ($expensereturn as $ea) {
+            $expensereturn_string = $expensereturn_string . $ea->amount . ",";
+        }
+        $expensereturn_string = rtrim($expensereturn_string, ",");
+                                                        
+        echo '{"Months":[' . $months . '], "Income":[' . $income_string . '],"IncomeReturn":[' . $incomereturn_string . '], "Expense":[' . $expense_string . '], "ExpenseReturn":[' . $expensereturn_string . ']}';
         exit();
     }
 
@@ -123,7 +142,7 @@ class DashboardController extends Controller {
 		UNION SELECT 5 AS MONTH UNION SELECT 6 AS MONTH UNION SELECT 7 AS MONTH UNION SELECT 8 AS MONTH
 		UNION SELECT 9 AS MONTH UNION SELECT 10 AS MONTH UNION SELECT 11 AS MONTH UNION SELECT 12 AS MONTH ) AS m
 		LEFT JOIN transactions ON m.month = MONTH(trans_date) AND YEAR(transactions.trans_date)=YEAR('$date')
-		AND dr_cr='cr' AND company_id='$company_id' GROUP BY m.month ORDER BY m.month ASC");
+		AND dr_cr='cr' and invoice_id !='' AND company_id='$company_id' GROUP BY m.month ORDER BY m.month ASC");
         return $query;
     }
 
@@ -135,16 +154,39 @@ class DashboardController extends Controller {
 		UNION SELECT 5 AS MONTH UNION SELECT 6 AS MONTH UNION SELECT 7 AS MONTH UNION SELECT 8 AS MONTH
 		UNION SELECT 9 AS MONTH UNION SELECT 10 AS MONTH UNION SELECT 11 AS MONTH UNION SELECT 12 AS MONTH ) AS m
 		LEFT JOIN transactions ON m.month = MONTH(trans_date) AND YEAR(transactions.trans_date)=YEAR('$date')
-		AND dr_cr='dr' AND company_id='$company_id' GROUP BY m.month ORDER BY m.month ASC");
+		AND dr_cr='dr' AND pembelian_id !='' AND company_id='$company_id' GROUP BY m.month ORDER BY m.month ASC");
         return $query;
     }
 
+    private function get_month_wise_incomereturn() {
+        $company_id = company_id();
+        $date       = date("Y-m-d");
+        $query      = DB::select("SELECT m.month, IFNULL(SUM(transactions.amount),0) as amount
+		FROM ( SELECT 1 AS MONTH UNION SELECT 2 AS MONTH UNION SELECT 3 AS MONTH UNION SELECT 4 AS MONTH
+		UNION SELECT 5 AS MONTH UNION SELECT 6 AS MONTH UNION SELECT 7 AS MONTH UNION SELECT 8 AS MONTH
+		UNION SELECT 9 AS MONTH UNION SELECT 10 AS MONTH UNION SELECT 11 AS MONTH UNION SELECT 12 AS MONTH ) AS m
+		LEFT JOIN transactions ON m.month = MONTH(trans_date) AND YEAR(transactions.trans_date)=YEAR('$date')
+		AND dr_cr='cr' and purchase_return_id !='' AND company_id='$company_id' GROUP BY m.month ORDER BY m.month ASC");
+        return $query;
+    }
+
+    private function get_month_wise_expensereturn() {
+        $company_id = company_id();
+        $date       = date("Y-m-d");
+        $query      = DB::select("SELECT m.month, IFNULL(SUM(transactions.amount),0) as amount
+		FROM ( SELECT 1 AS MONTH UNION SELECT 2 AS MONTH UNION SELECT 3 AS MONTH UNION SELECT 4 AS MONTH
+		UNION SELECT 5 AS MONTH UNION SELECT 6 AS MONTH UNION SELECT 7 AS MONTH UNION SELECT 8 AS MONTH
+		UNION SELECT 9 AS MONTH UNION SELECT 10 AS MONTH UNION SELECT 11 AS MONTH UNION SELECT 12 AS MONTH ) AS m
+		LEFT JOIN transactions ON m.month = MONTH(trans_date) AND YEAR(transactions.trans_date)=YEAR('$date')
+		AND dr_cr='dr' AND sales_return_id !='' AND company_id='$company_id' GROUP BY m.month ORDER BY m.month ASC");
+        return $query;
+    }
     private function get_current_month_income() {
         $company_id = company_id();
         $date       = date("Y-m-d");
         $query      = DB::select("SELECT IFNULL(SUM(amount),0) as amount FROM transactions WHERE dr_cr='cr'
 	 AND trans_date BETWEEN ADDDATE(LAST_DAY(SUBDATE('$date', INTERVAL 1 MONTH)), 1) AND LAST_DAY('$date')
-	 AND company_id='$company_id'");
+	 AND company_id='$company_id'" );
         return $query[0]->amount;
     }
 

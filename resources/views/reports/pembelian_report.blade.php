@@ -51,7 +51,7 @@
 
                             <div class="col-md-6 mb-2"
                             @if (jenis_langganan()=="POS")
-                                style="display:none"    
+                                style="display:none"
                             @endif
                             >
                                 <label>{{ _lang('Status Pembayaran') }}</label>
@@ -81,6 +81,4 @@
 @endsection
 
 
-@section('js-script')
 <script src="{{ asset('public/backend/assets/js/datatables/purchase-table-report.js?v=1.1') }}"></script>
-@endsection

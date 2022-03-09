@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="header-title">{{ _lang('Expense Report') }}</h4>
+                <h4 class="header-title">{{ _lang('Laporan Pembayaran') }}</h4>
             </div>
 
             <div class="card-body">
@@ -30,28 +30,30 @@
                                         value="{{ isset($date2) ? $date2 : old('date2') }}" readOnly="true" required>
                                 </div>
                             </div>
-
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label class="control-label">{{ _lang('Account') }}</label>
-                                    <select class="form-control auto-select" name="account"
-                                        data-selected="{{ isset($account) ? $account : old('account') }}">
-                                        <option value="">{{ _lang('All Account') }}</option>
-                                        {{ create_option('accounts','id','account_title','',array('company_id=' => company_id())) }}
-                                    </select>
+                            @if (jenis_langganan()=="POS")
+                            @else
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">{{ _lang('Account') }}</label>
+                                        <select class="form-control auto-select" name="account"
+                                            data-selected="{{ isset($account) ? $account : old('account') }}">
+                                            <option value="">{{ _lang('All Account') }}</option>
+                                            {{ create_option('accounts','id','account_title','',array('company_id=' => company_id())) }}
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label class="control-label">{{ _lang('Category') }}</label>
-                                    <select class="form-control auto-select select2" name="category"
-                                        data-selected="{{ isset($category) ? $category : old('category') }}">
-                                        <option value="">{{ _lang('All Category') }}</option>
-                                        {{ create_option("chart_of_accounts","id","name","",array("type="=>"expense","AND company_id="=>company_id())) }}
-                                    </select>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">{{ _lang('Category') }}</label>
+                                        <select class="form-control auto-select select2" name="category"
+                                            data-selected="{{ isset($category) ? $category : old('category') }}">
+                                            <option value="">{{ _lang('All Category') }}</option>
+                                            {{ create_option("chart_of_accounts","id","name","",array("type="=>"expense","AND company_id="=>company_id())) }}
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
 
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary btn-sm">{{ _lang('View Report') }}</button>
@@ -64,15 +66,19 @@
 				@php $date_format = get_date_format(); @endphp
 
                 <div class="report-header">
-                    <h5>{{ _lang('Expense Report') }}</h5>
+                    <h5>{{ _lang('Laporan Pembayaran') }}</h5>
                     <h6>{{ isset($date1) ? date($date_format,strtotime($date1)).' '._lang('to').' '.date($date_format,strtotime($date2)) : '-------------  '._lang('to').'  -------------' }}</h6>
                 </div>
 
                 <table class="table table-bordered report-table">
                     <thead>
                         <th>{{ _lang('Date') }}</th>
-                        <th>{{ _lang('Expense Type') }}</th>
-                        <th>{{ _lang('Account') }}</th>
+                        @if (jenis_langganan()=="POS")
+                            <th>{{ _lang('Referensi') }}</th>
+                        @else
+                            <th>{{ _lang('Expense Type') }}</th>
+                            <th>{{ _lang('Account') }}</th>
+                        @endif
 						<th>{{ _lang('Note') }}</th>
                         <th class="text-right">{{ _lang('Amount') }}</th>
                     </thead>
@@ -84,8 +90,12 @@
                         @foreach($report_data as $report)
                         <tr>
                             <td>{{ date($date_format,strtotime($report->trans_date)) }}</td>
-                            <td>{{ $report->expense_type }}</td>
-							<td>{{ $report->account }}</td>
+                            @if (jenis_langganan()=="POS")
+                                <td>{{ $report->reference }}</td>
+                            @else
+                                <td>{{ $report->expense_type }}</td>
+                                <td>{{ $report->account }}</td>
+                            @endif
                             <td>{{ $report->note }}</td>
                             <td class="text-right">{{ decimalPlace($report->amount, $currency)  }}</td>
                         </tr>

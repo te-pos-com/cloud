@@ -15,6 +15,8 @@
                 <label class="control-label">{{ _lang('Tipe') }}</label>
                 <select class="form-control select2" name="tipe">
                     @if(jenis_langganan()=="POS")
+                    @elseif (jenis_langganan()=="TRADING")
+                        <option value="1">{{ _lang('Barang Dengan Imei') }}</option>
                     @else
                         <option value="1">{{ _lang('Barang Dengan Imei') }}</option>
                     @endif
@@ -27,7 +29,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">{{ _lang('Barcode') }}</label>
-                <input type="text" class="form-control" name="barcode" value="" required>
+                <input type="text" class="form-control" name="barcode" value="{{ date('dmyyshd')}}" required>
             </div>
         </div>
         
@@ -79,14 +81,14 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">{{ _lang('Product Cost').' '.currency() }}</label>
-                <input type="text" class="form-control" name="product_cost" value="{{ old('product_cost') }}" required>
+                <input type="number" class="form-control price" name="product_cost" value="{{ old('product_cost') }}" required>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="form-group">
                 <label class="control-label">{{ _lang('Product Price') .' '.currency() }}</label>
-                <input type="text" class="form-control" name="product_price" value="{{ old('product_price') }}"
+                <input type="number" class="form-control" name="product_price" value="{{ old('product_price') }}"
                     required>
             </div>
         </div>

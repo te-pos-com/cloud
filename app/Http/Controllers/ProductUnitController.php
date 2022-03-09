@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\ProductUnit;
 use Illuminate\Http\Request;
 use Validator;
-
+use DB;
 class ProductUnitController extends Controller {
 
     /**
@@ -51,6 +51,8 @@ class ProductUnitController extends Controller {
                     ->withInput();
             }
         }
+
+        DB::select("ALTER TABLE product_units AUTO_INCREMENT=0");
 
         $productunit            = new ProductUnit();
         $productunit->unit_name = $request->input('unit_name');

@@ -25,4 +25,9 @@ class QuotationItem extends Model
         return $this->hasMany('App\QuotationItemTax',"quotation_item_id");
     }
 
+    public function gudang()
+    {
+        return $this->hasOne('App\Gudang',"id","gudang_id")->withDefault();
+    }
+
 }

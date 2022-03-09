@@ -22,6 +22,8 @@
                                     id="email_template_related_to" required>
                                     <option value="invoice">{{ _lang('Invoice') }}</option>
                                     @if(jenis_langganan()=="POS")
+                                    @elseif (jenis_langganan()=="TRADING")
+                                        <option value="quotation">{{ _lang('Quotation') }}</option>
                                     @else
                                         <option value="quotation">{{ _lang('Quotation') }}</option>
                                     @endif

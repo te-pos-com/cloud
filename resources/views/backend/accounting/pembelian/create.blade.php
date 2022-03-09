@@ -30,7 +30,7 @@
                             <div class="form-group">
                                 <label class="control-label">{{ _lang('Invoice Number') }}</label>
                                 <input type="text" class="form-control" name="invoice_number"
-                                    value="{{ old('invoice_number',get_company_option('invoice_pembelian_perfix').get_company_option('invoice_retur_pembelian')) }}"
+                                    value="{{ old('invoice_number',get_company_option('invoice_pembelian_perfix').get_company_option('invoice_pembelian')) }}"
                                     required>
                                 <input type="hidden" name="invoice_pembelian"
                                     value="{{ get_company_option('invoice_pembelian') }}">
@@ -88,17 +88,28 @@
                             </div>
                         </div>
                         @if (jenis_langganan()=="POS")
-                        @else
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="control-label">{{ _lang('Purchase Order') }}</label>
-                                <select class="form-control select2-ajax" name="id" data-value="id"
-                                    data-display="invoice_number" data-table="purchase_orders" data-where="1">
-                                    <option value="">{{ _lang('Select One') }}</option>
-                                    {{ create_option("purchase_orders","id","invoice_number",old('po_number'),array("company_id="=>company_id())) }}
-                                </select>
+                        @elseif (jenis_langganan()=="TRADING")
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Purchase Order') }}</label>
+                                    <select class="form-control select2-ajax" name="id" data-value="id"
+                                        data-display="invoice_number" data-table="purchase_orders" data-where="1">
+                                        <option value="">{{ _lang('Select One') }}</option>
+                                        {{ create_option("purchase_orders","id","invoice_number",old('po_number'),array("company_id="=>company_id())) }}
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Purchase Order') }}</label>
+                                    <select class="form-control select2-ajax" name="id" data-value="id"
+                                        data-display="invoice_number" data-table="purchase_orders" data-where="1">
+                                        <option value="">{{ _lang('Select One') }}</option>
+                                        {{ create_option("purchase_orders","id","invoice_number",old('po_number'),array("company_id="=>company_id())) }}
+                                    </select>
+                                </div>
+                            </div>
                         @endif
 
                         <!--Order table -->

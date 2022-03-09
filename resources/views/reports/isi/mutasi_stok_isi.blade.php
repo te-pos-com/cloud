@@ -43,11 +43,15 @@
             <th width="30%">{{ _lang('Nama Barang') }}</th>
             <th class="text-center">{{ _lang('Pembelian') }}</th>
             @if (jenis_langganan()=="POS")
+            @elseif (jenis_langganan()=="TRADING")
+                <th class="text-center">{{ _lang('Retur Pembelian') }}</th>
             @else
                 <th class="text-center">{{ _lang('Retur Pembelian') }}</th>
             @endif
             <th class="text-center">{{ _lang('Penjualan') }}</th>
             @if (jenis_langganan()=="POS")
+            @elseif (jenis_langganan()=="TRADING")
+                <th class="text-center">{{ _lang('Retur Penjualan') }}</th>
             @else
                 <th class="text-center">{{ _lang('Retur Penjualan') }}</th>
             @endif
@@ -76,11 +80,15 @@
                 <td>{{ $report->item_name }}</td>
                 <td class="text-center">{{ $report->pembelian }}</td>
                 @if (jenis_langganan()=="POS")
+                @elseif (jenis_langganan()=="TRADING")
+                    <td class="text-center">{{ $report->returpembelian }}</td>
                 @else
                     <td class="text-center">{{ $report->returpembelian }}</td>
                 @endif
                 <td class="text-center">{{ $report->penjualan }}</td>
                 @if (jenis_langganan()=="POS")
+                @elseif (jenis_langganan()=="TRADING")
+                    <td class="text-center">{{ $report->returpenjualan }}</td>
                 @else
                     <td class="text-center">{{ $report->returpenjualan }}</td>
                 @endif
@@ -92,11 +100,15 @@
             <th class="text-center" width="30%"><b>Total</b></th>
             <th class="text-center">{{ $pembelian }}</th>
             @if (jenis_langganan()=="POS")
+            @elseif (jenis_langganan()=="TRADING")
+                <th class="text-center">{{ $returpembelian }}</th>
             @else
                 <th class="text-center">{{ $returpembelian }}</th>
             @endif
             <th class="text-center">{{ $penjualan }}</th>
             @if (jenis_langganan()=="POS")
+            @elseif (jenis_langganan()=="TRADING")
+                <th class="text-center">{{ $returpenjualan }}</th>
             @else
                 <th class="text-center">{{ $returpenjualan }}</th>
             @endif

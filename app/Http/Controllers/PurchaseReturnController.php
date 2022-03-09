@@ -38,25 +38,49 @@ class PurchaseReturnController extends Controller
             ->editColumn('grand_total', function ($purchaseReturn) use ($currency) {
                 return "<span class='float-right'>" . decimalPlace($purchaseReturn->grand_total, $currency) . "</span>";
             })
+			->editColumn('paid', function ($purchaseReturn) use ($currency) {
+                return '<span class="float-right">' . decimalPlace($purchaseReturn->paid, $currency) . '</span>';
+            })
+            ->editColumn('payment_status', function ($purchaseReturn) {
+                if ($purchaseReturn->payment_status == 0) {
+                    return '<span class="badge badge-danger">' . _lang('Blum Lunas') . '</span>';
+                } else {
+                    return '<span class="badge badge-success">' . _lang('Lunas') . '</span>';
+                }
+            })
             ->addColumn('action', function ($purchaseReturn) {
-                return '<div class="dropdown text-center">'
-                . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
-                . '<i class="mdi mdi-chevron-down"></i></button>'
-                . '<div class="dropdown-menu">'
-                . '<a class="dropdown-item" href="' . action('PurchaseReturnController@edit', $purchaseReturn->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a></li>'
-                . '<a class="dropdown-item" href="' . action('PurchaseReturnController@show', $purchaseReturn->id) . '"><i class="ti-eye"></i> ' . _lang('View') . '</a></li>'
-                . '<form action="' . action('PurchaseReturnController@destroy', $purchaseReturn->id) . '" method="post">'
-                . csrf_field()
-                . '<input name="_method" type="hidden" value="DELETE">'
-                . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
+				if ($purchaseReturn->payment_status==1){
+					return '<div class="dropdown text-center">'
+					. '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
+					. '<i class="mdi mdi-chevron-down"></i></button>'
+					. '<div class="dropdown-menu">'
+					. '<a class="dropdown-item" href="' . action('PurchaseReturnController@show', $purchaseReturn->id) . '"><i class="ti-eye"></i> ' . _lang('View') . '</a></li>'
+					. '<a href="' . route('purchase_return.view_payment', $purchaseReturn->id) . '" data-title="' . _lang('View Payments') . '" data-fullscreen="true" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('View Payment History') . '</a>'
+					. '</div>'
+                    . '</div>';
+				}
+				else{
+					return '<div class="dropdown text-center">'
+					. '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
+					. '<i class="mdi mdi-chevron-down"></i></button>'
+					. '<div class="dropdown-menu">'
+					. '<a class="dropdown-item" href="' . action('PurchaseReturnController@edit', $purchaseReturn->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a></li>'
+					. '<a class="dropdown-item" href="' . action('PurchaseReturnController@show', $purchaseReturn->id) . '"><i class="ti-eye"></i> ' . _lang('View') . '</a></li>'
+					. '<a href="' . route('purchase_return.create_payment', $purchaseReturn->id) . '" data-title="' . _lang('Make Payment') . '" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('Make Payment') . '</a>'
+					. '<a href="' . route('purchase_return.view_payment', $purchaseReturn->id) . '" data-title="' . _lang('View Payments') . '" data-fullscreen="true" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('View Payment History') . '</a>'
+					. '<form action="' . action('PurchaseReturnController@destroy', $purchaseReturn->id) . '" method="post">'
+					. csrf_field()
+					. '<input name="_method" type="hidden" value="DELETE">'
+					. '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
                     . '</form>'
                     . '</div>'
                     . '</div>';
+				}
             })
             ->setRowId(function ($purchaseReturn) {
                 return "row_" . $purchaseReturn->id;
             })
-            ->rawColumns(['grand_total', 'action'])
+            ->rawColumns(['grand_total', 'paid', 'payment_status', 'action'])
             ->make(true);
     }
 
@@ -127,6 +151,7 @@ class PurchaseReturnController extends Controller
 		$purchaseReturn->grand_total        = $purchaseReturn->product_total + $purchaseReturn->tax_amount;
 		$purchaseReturn->attachemnt         = $attachemnt;
 		$purchaseReturn->note               = $request->input('note');
+        $purchaseReturn->user_id            = user_id();
 	
 		$purchaseReturn->save();
 		
@@ -296,7 +321,7 @@ class PurchaseReturnController extends Controller
 		$purchaseReturn->grand_total        = ($purchaseReturn->product_total + $purchaseReturn->tax_amount);
 		$purchaseReturn->attachemnt         = $attachemnt;
 		$purchaseReturn->note               = $request->input('note');
-	
+        $purchaseReturn->user_id_update     = user_id();
 		$purchaseReturn->save();
 		
 		$taxes = Tax::all();
@@ -459,5 +484,105 @@ class PurchaseReturnController extends Controller
         return back()->with('success',_lang('Deleted Sucessfully'));
 	}
 		
+
+	public function store_payment(Request $request, $id = '') {
+        if ($request->isMethod('get')) {
+            $purchase_return = PurchaseReturn::find($id);
+
+            if ($request->ajax()) {
+                return view('backend.accounting.purchase_return.modal.create_payment', compact('purchase_return', 'id'));
+            }
+        }
+        if(jenis_langganan()=="POS" || jenis_langganan()=="TRADING"){
+            $validator = Validator::make($request->all(), [
+                'purchase_return_id'       => 'required',
+                'amount'            => 'required|numeric',
+                'payment_method_id' => 'required',
+                'reference'         => 'nullable|max:50',
+                'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+            ]);    
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'purchase_return_id'       => 'required',
+                'account_id'        	   => 'required',
+                'chart_id'          	   => 'required',
+                'amount'                   => 'required|numeric',
+                'payment_method_id'        => 'required',
+                'reference'                => 'nullable|max:50',
+                'attachment'        	   => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+            ]);    
+        }
+        
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['result' => 'error', 'message' => $validator->errors()->all()]);
+            } else {
+                return back()->withErrors($validator)
+                    ->withInput();
+            }
+        }
+
+        $attachment = "";
+        if ($request->hasfile('attachment')) {
+            $file       = $request->file('attachment');
+            $attachment = time() . $file->getClientOriginalName();
+            $file->move(public_path() . "/uploads/transactions/", $attachment);
+        }
+        if(jenis_langganan()=="POS"||jenis_langganan()=="TRADING"){
+            $transaction                    = new Transaction();
+            $transaction->trans_date        = date('Y-m-d');
+            $transaction->type              = 'income';
+            $transaction->dr_cr             = 'cr';
+            $transaction->amount            = $request->input('amount');
+            $transaction->payment_method_id = $request->input('payment_method_id');
+            $transaction->purchase_return_id       = $request->input('purchase_return_id');
+            $transaction->reference         = $request->input('reference');
+            $transaction->note              = $request->input('note');
+            $transaction->attachment        = $attachment;
+            $transaction->user_id           = user_id();
+        }
+        else{
+            $transaction                    = new Transaction();
+            $transaction->trans_date        = date('Y-m-d');
+            $transaction->account_id        = $request->input('account_id');
+            $transaction->chart_id          = $request->input('chart_id');
+            $transaction->type              = 'income';
+            $transaction->dr_cr             = 'cr';
+            $transaction->amount            = $request->input('amount');
+            $transaction->payment_method_id = $request->input('payment_method_id');
+            $transaction->purchase_return_id       = $request->input('purchase_return_id');
+            $transaction->reference         = $request->input('reference');
+            $transaction->note              = $request->input('note');
+            $transaction->attachment        = $attachment;
+            $transaction->user_id           = user_id();
+        }
+        $transaction->user_id        = user_id();
+        $transaction->save();
+
+        //Update Pembelian Order Table
+        $purchase_return       = PurchaseReturn::find($transaction->purchase_return_id);
+        $purchase_return->paid = $purchase_return->paid + $transaction->amount;
+        if (round($purchase_return->paid, 2) >= $purchase_return->grand_total) {
+            $purchase_return->payment_status = 1;
+        }
+        $purchase_return->save();
+
+        if ($request->ajax()) {
+            return response()->json(['result' => 'success', 'action' => 'store', 'message' => _lang('Payment was made Sucessfully'), 'data' => $transaction]);
+        }
+    }
+
+	public function view_payment(Request $request, $purchase_return_id) {
+
+        $transactions = Transaction::where("purchase_return_id", $purchase_return_id)->get();
+
+        if (!$request->ajax()) {
+            return view('backend.accounting.purchase_return.view_payment', compact('transactions'));
+        } else {
+            return view('backend.accounting.purchase_return.modal.view_payment', compact('transactions'));
+        }
+    }
+
 	
 }

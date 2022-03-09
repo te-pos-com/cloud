@@ -43,12 +43,12 @@ class MembershipController extends Controller {
 
         $data = array();
         if ($request->extend_type == "yearly") {
-            $data['title']  = "Extend Membership for " . $request->year . " year";
-            $data['amount'] = get_option('yearly_cost') * $request->year;
+            $data['title']  = "Extend Membership for " . $request->year . " year and " .cabang_aktif() . " Cabang";
+            $data['amount'] = get_option('yearly_cost')*cabang_aktif() * $request->year;
             $data['custom'] = $request->year . ' year';
         } else if ($request->extend_type == "montly") {
-            $data['title']  = "Extend Membership for " . $request->month . " month.";
-            $data['amount'] = get_option('monthly_cost') * $request->month;
+            $data['title']  = "Extend Membership for " . $request->month . " month  and " .cabang_aktif() . " Cabang";
+            $data['amount'] = get_option('monthly_cost')*cabang_aktif() * $request->month;
             $data['custom'] = $request->month . ' month';
         }
 

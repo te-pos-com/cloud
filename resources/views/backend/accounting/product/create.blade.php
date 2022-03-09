@@ -27,6 +27,8 @@
                                 <label class="control-label">Tipe</label>
                                 <select class="form-control select2" name="tipe">
                                     @if(jenis_langganan()=="POS")
+                                    @elseif (jenis_langganan()=="TRADING")
+                                        <option value="1">Barang Dengan Imei</option>
                                     @else
                                         <option value="1">Barang Dengan Imei</option>
                                     @endif
@@ -48,7 +50,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label">{{ _lang('Product Cost').' '.currency() }}</label>
-                                <input type="text" class="form-control" name="product_cost"
+                                <input type="text" class="form-control number" name="product_cost"
                                     value="{{ old('product_cost') }}" required>
                             </div>
                         </div>

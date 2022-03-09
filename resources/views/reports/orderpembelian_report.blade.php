@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Supplier') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="supplier"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('suppliers','id','supplier_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -52,11 +52,9 @@
                             <div class="col-md-6 mb-2">
                                 <label>{{ _lang('Status') }}</label>
                                 <select class="form-control select2 select-filter" name="order_status"
-                                data-selected="1" multiple="true">
+                                data-selected="1" multiple="false">
                                     <option value="1" >{{ _lang('Ordered') }}</option>
-                                    <option value="2">{{ _lang('Pending') }}</option>
                                     <option value="3">{{ _lang('Received') }}</option>
-                                    <option value="4">{{ _lang('Canceled') }}</option>
                                 </select>
                             </div>
 
@@ -79,6 +77,4 @@
 @endsection
 
 
-@section('js-script')
 <script src="{{ asset('public/backend/assets/js/datatables/purchase-order-table-report.js?v=1.1') }}"></script>
-@endsection

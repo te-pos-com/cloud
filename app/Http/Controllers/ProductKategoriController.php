@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\ProductKategori;
 use Illuminate\Http\Request;
 use Validator;
-
+use DB;
 class ProductKategoriController extends Controller {
 
     /**
@@ -51,6 +51,7 @@ class ProductKategoriController extends Controller {
                     ->withInput();
             }
         }
+		DB::select("ALTER TABLE product_kategori AUTO_INCREMENT=0");
 
         $productkategori            = new ProductKategori();
         $productkategori->kategori_name = $request->input('kategori_name');

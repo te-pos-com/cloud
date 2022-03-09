@@ -160,6 +160,8 @@
                     <div class="nav">
                         @if (jenis_langganan()=="POS")
                             @include('layouts.menus.pos.'.Auth::user()->user_type)
+                        @elseif (jenis_langganan()=="TRADING")
+                            @include('layouts.menus.trading.'.Auth::user()->user_type)
                         @else
                             @include('layouts.menus.'.Auth::user()->user_type)
                         @endif
@@ -216,7 +218,7 @@
     <script src="{{ asset('public/backend/plugins/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('public/backend/plugins/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ asset('public/backend/plugins/jquery-toast-plugin/jquery.toast.min.js') }}"></script>
-
+    <script src="{{ asset('public/backend/plugins/number/jquery.number.js') }}"></script>
     <!-- App js -->
     <script src="{{ asset('public/backend/assets/js/scripts.js?v=1.1') }}"></script>
 
@@ -268,8 +270,15 @@
         @endforeach
 
     })(jQuery);
+    $(function(){				
+        $('.price').on('change',function(){
+            console.log('Change event.');
+            var val = $('.price').val();
+            console.log( val !== '' ? val : '(empty)' );
+        });
+    });    
     </script>
-
+   
     <!-- Custom JS -->
     @yield('js-script')
 

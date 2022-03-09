@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Supplier;
 use Validator;
 use Illuminate\Validation\Rule;
+use DB;
 
 class SupplierController extends Controller
 {
@@ -70,7 +71,8 @@ class SupplierController extends Controller
 			}			
 		}
 			
-	    	
+        DB::select("ALTER TABLE suppliers AUTO_INCREMENT=0");
+
         $supplier= new Supplier();
 	    $supplier->supplier_name = $request->input('supplier_name');
         $supplier->company_name = $request->input('company_name');

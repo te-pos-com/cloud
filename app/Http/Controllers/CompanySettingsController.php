@@ -17,7 +17,11 @@ class CompanySettingsController extends Controller {
         if ($store == "") {
             if (jenis_langganan()=="POS"){
                 return view('backend.accounting.general_settings.settings_pos');
-            }else{
+            }
+            elseif (jenis_langganan()=="TRADING"){
+                return view('backend.accounting.general_settings.settings_trading');
+            }
+            else{
                 return view('backend.accounting.general_settings.settings');
             }
         } else {

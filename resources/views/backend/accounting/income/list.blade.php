@@ -7,17 +7,25 @@
         <div class="card">
             <div class="card-header d-flex align-items-center">
 				<span class="header-title">{{ _lang('List Income') }}</span>
-                <a class="btn btn-primary btn-sm ml-auto ajax-modal" data-title="{{ _lang('Add Income') }}"
-                    href="{{ route('income.create') }}"><i class="ti-plus"></i> {{ _lang('Add New') }}</a>
-            </div>
+                @if(jenis_langganan()=="POS")
+                @elseif(jenis_langganan()=="TRADING")
+                @else
+                    <a class="btn btn-primary btn-sm ml-auto ajax-modal" data-title="{{ _lang('Add Income') }}"
+                        href="{{ route('income.create') }}"><i class="ti-plus"></i> {{ _lang('Add New') }}</a>
+                @endif
+                </div>
 
             <div class="card-body">
                 <table id="income-table" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>{{ _lang('Date') }}</th>
-                            <th>{{ _lang('Account') }}</th>
-                            <th>{{ _lang('Income Type') }}</th>
+                            @if(jenis_langganan()=="POS")
+                            @elseif(jenis_langganan()=="TRADING")
+                            @else
+                                <th>{{ _lang('Account') }}</th>
+                            @endif
+                            <th>{{ _lang('Referensi') }}</th>
                             <th class="text-right">{{ _lang('Amount') }}</th>
                             <th>{{ _lang('Payer') }}</th>
                             <th>{{ _lang('Payment Method') }}</th>
@@ -35,5 +43,11 @@
 @endsection
 
 @section('js-script')
-<script src="{{ asset('public/backend/assets/js/datatables/income-table.js?v=1.1') }}"></script>
+@if (jenis_langganan()=="POS")
+    <script src="{{ asset('public/backend/assets/js/datatables/income-pos-table.js?v=1.1') }}"></script>
+@elseif(jenis_langganan()=="TRADING")
+    <script src="{{ asset('public/backend/assets/js/datatables/income-trading-table.js?v=1.1') }}"></script>
+@else
+    <script src="{{ asset('public/backend/assets/js/datatables/income-table.js?v=1.1') }}"></script>
+@endif
 @endsection

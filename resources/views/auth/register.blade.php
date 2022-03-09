@@ -23,7 +23,7 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-md-7">
                     <h3>Register to<img src="{{url('')}}/public/backend/images/logo.png" width="150px" height="50px"></h3>
-                    <p class="mb-4">Program Kasir, Mudah digunakan.</p>
+                    <p class="mb-4">Program Kasir,Inventory,Keuangan,Accounting.</p>
                     <div id="hasil"></div>
                     <form method="POST" class="form-signup" autocomplete="off" action="{{ route('register') }}">
                         @csrf
@@ -78,6 +78,9 @@
                                     <option value="" disabled selected>Layanan</option>
                                     <option value="POS">
                                        POS
+                                    </option>
+                                    <option value="TRADING">
+                                       TRADING
                                     </option>
                                 </select>
                             </div>

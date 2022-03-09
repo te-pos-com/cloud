@@ -11,9 +11,12 @@
             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#invoices"><i class="ti-receipt"></i>
                     {{ _lang('Invoices') }}</a></li>
             @if (jenis_langganan()=="POS")
+            @elseif (jenis_langganan()=="TRADING")
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#quotations"><i
+                        class="ti-file"></i> {{ _lang('Quotations') }}</a></li>
             @else
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#quotations"><i
-                            class="ti-file"></i> {{ _lang('Quotations') }}</a></li>
+                        class="ti-file"></i> {{ _lang('Quotations') }}</a></li>
             @endif
             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#transaction"><i
                         class="ti-credit-card"></i> {{ _lang('Transactions') }}</a></li>

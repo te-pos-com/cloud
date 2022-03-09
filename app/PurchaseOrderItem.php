@@ -24,4 +24,9 @@ class PurchaseOrderItem extends Model
     {
         return $this->hasMany('App\PurchaseOrderItemTax',"purchase_order_item_id");
     }
+
+    public function gudang()
+    {
+        return $this->hasOne('App\Gudang',"id","gudang_id")->withDefault();
+    }
 }

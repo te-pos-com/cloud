@@ -18,13 +18,13 @@
                         
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="control-label">{{ _lang('Extend Monthly/Yearly') }}</label>
+                                <label class="control-label">{{ _lang('Extend Monthly/Yearly') }} {{cabang_aktif()}} Cabang Aktif</label>
                                 <select class="form-control" name="extend_type" id="extend_type" required>
                                     <option value="yearly">
-                                        {{ _lang('Yearly').' / '.currency( get_option('currency','USD') ).' '.number_format(get_option('yearly_cost')) }}
+                                        {{ _lang('Yearly').' / '.currency( get_option('currency','USD') ).' '.number_format(get_option('yearly_cost')*cabang_aktif()) }}
                                     </option>
                                     <option value="montly">
-                                        {{ _lang('Monthly').' / '.currency( get_option('currency','USD') ).' '.number_format(get_option('monthly_cost')) }}
+                                        {{ _lang('Monthly').' / '.currency( get_option('currency','USD') ).' '.number_format(get_option('monthly_cost')*cabang_aktif()) }}
                                     </option>
                                 </select>
                             </div>

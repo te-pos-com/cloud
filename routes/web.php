@@ -127,6 +127,7 @@ Route::group(['middleware' => ['install']], function () {
 			//Purchase Order
 			Route::match(['get', 'post'],'purchase_orders/store_payment/{id?}','PurchaseController@store_payment')->name('purchase_orders.create_payment');
 			Route::get('purchase_orders/view_payment/{id}','PurchaseController@view_payment')->name('purchase_orders.view_payment');
+			Route::get('purchase_orders/convert_pembelian/{id}','PurchaseController@convert_pembelian')->name('purchase_orders.convert_pembelian');
 			Route::get('purchase_orders/download_pdf/{id}','PurchaseController@download_pdf')->name('purchase_orders.download_pdf');
 			Route::post('purchase_orders/get_table_data','PurchaseController@get_table_data');
 			Route::resource('purchase_orders','PurchaseController');
@@ -142,10 +143,15 @@ Route::group(['middleware' => ['install']], function () {
 			//Purchase Return
 			Route::get('purchase_returns/get_table_data','PurchaseReturnController@get_table_data');
 			Route::resource('purchase_returns','PurchaseReturnController');
-			
+			Route::match(['get', 'post'],'purchase_return/store_payment/{id?}','PurchaseReturnController@store_payment')->name('purchase_return.create_payment');
+			Route::get('purchase_return/view_payment/{id}','PurchaseReturnController@view_payment')->name('purchase_return.view_payment');
+
 			//Sales Return
 			Route::get('sales_returns/get_table_data','SalesReturnController@get_table_data');
 			Route::resource('sales_returns','SalesReturnController');
+			Route::match(['get', 'post'],'sales_return/store_payment/{id?}','SalesReturnController@store_payment')->name('sales_return.create_payment');
+			Route::get('sales_return/view_payment/{id}','SalesReturnController@view_payment')->name('sales_return.view_payment');
+
 						
 			//Invoice Controller
 			Route::get('invoices/download_pdf/{id}','InvoiceController@download_pdf')->name('invoices.download_pdf');

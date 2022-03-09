@@ -10,6 +10,8 @@
 				{ data : "return_date", name : "return_date" },
 				{ data : "customer.contact_name", name : "customer.contact_name" },
 				{ data : "grand_total", name : "grand_total" },
+				{ data : "paid", name : "paid" },
+				{ data : "payment_status", name : "payment_status" },
 				{ data : "action", name : "action" },
 			],
 			responsive: true,

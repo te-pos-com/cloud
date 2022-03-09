@@ -24,4 +24,9 @@ class SalesReturnItem extends Model
     {
         return $this->hasMany('App\SalesReturnItemTax',"sales_return_item_id");
     }
+    
+    public function gudang()
+    {
+        return $this->hasOne('App\Gudang',"id","gudang_id")->withDefault();
+    }
 }

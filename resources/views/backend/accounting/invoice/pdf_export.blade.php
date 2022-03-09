@@ -56,6 +56,9 @@
                         <b>{{ _lang('Invoice Date') }}:</b>
                         {{ $invoice->invoice_date }}<br>
                         @if (jenis_langganan()=="POS")
+                        @elseif(jenis_langganan()=="TRADING")
+                            <b>{{ _lang('Due Date') }}:</b>
+                            {{ $invoice->due_date }}<br>
                         @else
                             <b>{{ _lang('Due Date') }}:</b>
                             {{ $invoice->due_date }}<br>

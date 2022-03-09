@@ -49,7 +49,20 @@
         </nav>
     </div>
 
-
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#transactions" aria-expanded="false"
+    aria-controls="collapseLayouts">
+    <div class="sb-nav-link-icon"><i class="ti-receipt"></i></div>
+    {{ _lang('Keuangan') }}
+    <div class="sb-sidenav-collapse-arrow"><i class="ti-angle-down"></i></div>
+    </a>
+    <div class="collapse" id="transactions" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+            <a class="nav-link" href="{{ route('expense.index') }}">{{ _lang('Pembayaran') }}</a>
+            <a class="nav-link" href="{{ route('income.index') }}">{{ _lang('Penerimaan') }}</a>
+            <a class="nav-link" href="{{ route('expense.expense_calendar') }}">{{ _lang('Kalender Pembayaran') }}</a>
+            <a class="nav-link" href="{{ route('income.income_calendar') }}">{{ _lang('Kalender Penerimaan') }}</a>
+        </nav>
+    </div>
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#reports" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-bar-chart"></i></div>
@@ -63,6 +76,8 @@
         <a class="nav-link" href="{{ route('reports.pembelian_report') }}">{{ _lang('Laporan Pembelian') }}</a>
         <a class="nav-link" href="{{ route('reports.penjualan_report') }}">{{ _lang('Laporan Penjualan') }}</a>
         <a class="nav-link" href="{{ route('reports.laba_rugi_report') }}">{{ _lang('Laporan Laba/Rugi') }}</a>
+        <a class="nav-link" href="{{ route('reports.expense_report') }}">{{ _lang('Laporan Pembayaran') }}</a>
+        <a class="nav-link" href="{{ route('reports.income_report') }}">{{ _lang('Laporan Penerimaan') }}</a>
         </nav>
     </div>
 

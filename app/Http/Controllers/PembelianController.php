@@ -9,6 +9,7 @@ use App\Stock;
 use App\Hpp;
 use App\Tax;
 use App\Transaction;
+use App\Purchase;
 use DataTables;
 use DB;
 use Illuminate\Http\Request;
@@ -79,7 +80,17 @@ class PembelianController extends Controller {
                 }
             })
             ->addColumn('action', function ($pembelian) {
-                if (jenis_langganan()=="POS"){
+                if ($pembelian->payment_status==1){
+                    return '<div class="dropdown text-center">'
+                    . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
+                    . '&nbsp;<i class="fas fa-angle-down"></i></button>'
+                    . '<div class="dropdown-menu">'
+                    . '<a class="dropdown-item" href="' . action('PembelianController@show', $pembelian->id) . '" data-title="' . _lang('View Invoice') . '" data-fullscreen="true"><i class="ti-eye"></i> ' . _lang('View') . '</a>'
+                    . '<a href="' . route('pembelian.view_payment', $pembelian->id) . '" data-title="' . _lang('View Payments') . '" data-fullscreen="true" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('View Payment History') . '</a>'
+                    . '</div>'
+                    . '</div>';
+                }
+                else{
                     return '<div class="dropdown text-center">'
                     . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
                     . '&nbsp;<i class="fas fa-angle-down"></i></button>'
@@ -92,25 +103,9 @@ class PembelianController extends Controller {
                     . csrf_field()
                     . '<input name="_method" type="hidden" value="DELETE">'
                     . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
-                        . '</form>'
-                        . '</div>'
-                        . '</div>';
-                }else{
-                    return '<div class="dropdown text-center">'
-                    . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
-                    . '&nbsp;<i class="fas fa-angle-down"></i></button>'
-                    . '<div class="dropdown-menu">'
-                    . '<a class="dropdown-item" href="' . action('PembelianController@edit', $pembelian->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a>'
-                    . '<a class="dropdown-item" href="' . action('PembelianController@show', $pembelian->id) . '" data-title="' . _lang('View Invoice') . '" data-fullscreen="true"><i class="ti-eye"></i> ' . _lang('View') . '</a>'
-                    . '<a href="' . route('pembelian.create_payment', $pembelian->id) . '" data-title="' . _lang('Make Payment') . '" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('Make Payment') . '</a>'
-                    . '<a href="' . route('pembelian.view_payment', $pembelian->id) . '" data-title="' . _lang('View Payments') . '" data-fullscreen="true" class="dropdown-item ajax-modal"><i class="ti-credit-card"></i> ' . _lang('View Payment History') . '</a>'
-                    . '<form action="' . action('PembelianController@destroy', $pembelian['id']) . '" method="post">'
-                    . csrf_field()
-                    . '<input name="_method" type="hidden" value="DELETE">'
-                    . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
-                        . '</form>'
-                        . '</div>'
-                        . '</div>';
+                    . '</form>'
+                    . '</div>'
+                    . '</div>';
                 }
             })
             ->setRowId(function ($pembelian) {
@@ -218,7 +213,7 @@ class PembelianController extends Controller {
             $hpp->flag                  = 1;
             $hpp->stok                  = $hpp->stok + $pembelianItem->quantity;
             $hpp->stok_sisa             = $hpp->stok-$hpp->stok_terpakai; 
-            $hpp->harga                 = $request->sub_total[$i];
+            $hpp->harga                 = $request->sub_total[$i]/ $request->quantity[$i];
             $hpp->save();
 
             //Store Pembelian Taxes
@@ -248,7 +243,9 @@ class PembelianController extends Controller {
             
         }
         
-        increment_pembelian_number();
+        if(is_numeric(get_company_option('invoice_pembelian'))==true){
+            increment_pembelian_number();
+        }
         DB::commit();
 
         if (!$request->ajax()) {
@@ -369,14 +366,9 @@ class PembelianController extends Controller {
         $pembelian->user_id_update = user_id();
         $pembelian->grand_total    = ($pembelian->product_total + $pembelian->shipping_cost + $pembelian->order_tax) - $pembelian->order_discount;
 
-        if(jenis_langganan()=="POS"){
-            $pembelian->payment_status = 1;
-            $pembelian->paid = ($pembelian->product_total + $pembelian->shipping_cost + $pembelian->order_tax) - $pembelian->order_discount;
-        }else{
-            $pembelian->payment_status = $request->input('payment_status');
-            if (round($pembelian->paid, 2) < $pembelian->grand_total) {
-                $pembelian->payment_status = 0;
-            }
+        $pembelian->payment_status = $request->input('payment_status');
+        if (round($pembelian->paid, 2) < $pembelian->grand_total) {
+            $pembelian->payment_status = 0;
         }
 
         if ($request->hasfile('attachemnt')) {
@@ -475,7 +467,16 @@ class PembelianController extends Controller {
         DB::beginTransaction();
 
         $pembelian = Pembelian::find($id);
+
+        if ($pembelian->po_number!=""){
+            $purchase = Purchase::find($pembelian->po_number,'id');
+            $purchase->order_status="1";
+            $purchase->save();
+               
+        }
+
         $pembelian->delete();
+
 
         $transaksi = Transaction::where("pembelian_id",$id);
         if ($transaksi){
@@ -509,7 +510,7 @@ class PembelianController extends Controller {
                 return view('backend.accounting.pembelian.modal.create_payment', compact('pembelian', 'id'));
             }
         }
-        if(jenis_langganan()=="POS"){
+        if(jenis_langganan()=="POS" || jenis_langganan()=="TRADING"){
             $validator = Validator::make($request->all(), [
                 'pembelian_id'       => 'required',
                 'amount'            => 'required|numeric',
@@ -545,7 +546,7 @@ class PembelianController extends Controller {
             $attachment = time() . $file->getClientOriginalName();
             $file->move(public_path() . "/uploads/transactions/", $attachment);
         }
-        if(jenis_langganan()=="POS"){
+        if(jenis_langganan()=="POS"||jenis_langganan()=="TRADING"){
             $transaction                    = new Transaction();
             $transaction->trans_date        = date('Y-m-d');
             $transaction->type              = 'expense';
@@ -556,7 +557,9 @@ class PembelianController extends Controller {
             $transaction->reference         = $request->input('reference');
             $transaction->note              = $request->input('note');
             $transaction->attachment        = $attachment;
-        }else{
+            $transaction->user_id           = user_id();
+        }
+        else{
             $transaction                    = new Transaction();
             $transaction->trans_date        = date('Y-m-d');
             $transaction->account_id        = $request->input('account_id');
@@ -569,6 +572,7 @@ class PembelianController extends Controller {
             $transaction->reference         = $request->input('reference');
             $transaction->note              = $request->input('note');
             $transaction->attachment        = $attachment;
+            $transaction->user_id           = user_id();
         }
         $transaction->user_id        = user_id();
         $transaction->save();

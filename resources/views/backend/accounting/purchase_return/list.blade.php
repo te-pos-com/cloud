@@ -19,6 +19,8 @@
                             <th>{{ _lang('Return Date') }}</th>
                             <th>{{ _lang('Supplier') }}</th>
                             <th class="text-right">{{ _lang('Grand Total') }}</th>
+                            <th class="text-right">{{ _lang('Pembayaran') }}</th>
+                            <th>{{ _lang('Payment Status') }}</th>
                             <th class="text-center">{{ _lang('Action') }}</th>
                         </tr>
                     </thead>

@@ -159,12 +159,12 @@ sup {
 }
 
 a {
-  color: #007bff;
+  color: #fff;
   text-decoration: none;
   background-color: transparent;
 }
 a:hover {
-  color: #0056b3;
+  color: #fff;
   text-decoration: underline;
 }
 
@@ -10109,7 +10109,7 @@ body {
 }
 @media (max-width: 992px) {
   #layoutSidenav #layoutSidenav_content {
-    padding-left: 0px;
+    padding-left: 15px;
   }
   .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
 	  position: fixed;

@@ -73,6 +73,32 @@
         </div>
     @endif
 
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#transactions" aria-expanded="false"
+    aria-controls="collapseLayouts">
+    <div class="sb-nav-link-icon"><i class="ti-receipt"></i></div>
+    {{ _lang('Keuangan') }}
+    <div class="sb-sidenav-collapse-arrow"><i class="ti-angle-down"></i></div>
+    </a>
+    <div class="collapse" id="transactions" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+        <nav class="sb-sidenav-menu-nested nav">
+            @if (in_array('expense.index',$permissions))
+            <a class="nav-link" href="{{ route('expense.index') }}">{{ _lang('Pembayaran') }}</a>
+            @endif
+            
+            @if (in_array('income.index',$permissions))
+            <a class="nav-link" href="{{ route('income.index') }}">{{ _lang('Penerimaan') }}</a>
+            @endif
+
+            @if (in_array('expense.expense_calendar',$permissions))
+            <a class="nav-link" href="{{ route('expense.expense_calendar') }}">{{ _lang('Kalender Pembayaran') }}</a>
+            @endif
+
+            @if (in_array('income.income_calendar',$permissions))
+            <a class="nav-link" href="{{ route('income.income_calendar') }}">{{ _lang('Kalender Penerimaan') }}</a>
+            @endif
+
+        </nav>
+    </div>
 
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#reports" aria-expanded="false"
         aria-controls="collapseLayouts">
@@ -96,6 +122,14 @@
         @endif
         @if (in_array('reports.laba_rugi_report',$permissions))
             <a class="nav-link" href="{{ route('reports.laba_rugi_report') }}">{{ _lang('Laporan Laba/Rugi') }}</a>
+        @endif
+
+        @if (in_array('reports.expense_report',$permissions))
+        <a class="nav-link" href="{{ route('reports.expense_report') }}">{{ _lang('Laporan Pembayaran') }}</a>
+        @endif
+
+        @if (in_array('reports.income_report',$permissions))
+        <a class="nav-link" href="{{ route('reports.income_report') }}">{{ _lang('Laporan Penerimaan') }}</a>
         @endif
         </nav>
     </div>

@@ -6,6 +6,7 @@ use App\Transaction;
 use DataTables;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
 
 class IncomeController extends Controller {
 
@@ -22,14 +23,31 @@ class IncomeController extends Controller {
 
         $currency = currency();
 
-        $transactions = Transaction::with("account")
-            ->with("income_type")
-            ->with("payer")
-            ->with("payment_method")
-            ->select('transactions.*')
-            ->where("transactions.dr_cr", "cr")
-            ->orderBy("transactions.id", "desc");
-
+        if (jenis_langganan()=="POS"){
+            $transactions = Transaction::with("income_type")
+                ->with("payer")
+                ->with("payment_method")
+                ->select('transactions.*')
+                ->where("transactions.dr_cr", "cr")
+                ->orderBy("transactions.id", "desc");
+        }
+        elseif(jenis_langganan()=="TRADING"){
+            $transactions = Transaction::with("income_type")
+                ->with("payer")
+                ->with("payment_method")
+                ->select('transactions.*')
+                ->where("transactions.dr_cr", "cr")
+                ->orderBy("transactions.id", "desc");
+        }
+        else{
+            $transactions = Transaction::with("account")
+                ->with("income_type")
+                ->with("payer")
+                ->with("payment_method")
+                ->select('transactions.*')
+                ->where("transactions.dr_cr", "cr")
+                ->orderBy("transactions.id", "desc");
+        }
         return Datatables::eloquent($transactions)  
             ->editColumn('amount', function ($trans) use ($currency) {
                 return "<span class='float-right'>" .decimalPlace($trans->amount, $currency) . "</span>";
@@ -41,7 +59,8 @@ class IncomeController extends Controller {
                 return isset($trans->income_type->name) ? $trans->income_type->name : _lang('Transfer');
             })
             ->addColumn('action', function ($trans) {
-                if (isset($trans->income_type->name)) {
+                if (jenis_langganan()=="POS")
+                {
                     return '<form action="' . action('IncomeController@destroy', $trans['id']) . '" class="text-center" method="post">'
                     . '<a href="' . action('IncomeController@edit', $trans['id']) . '" data-title="' . _lang('Update Income') . '" class="btn btn-warning btn-sm ajax-modal"><i class="ti-pencil-alt"></i></a> '
                     . '<a href="' . action('IncomeController@show', $trans['id']) . '" data-title="' . _lang('View Income') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
@@ -49,14 +68,45 @@ class IncomeController extends Controller {
                     . '<input name="_method" type="hidden" value="DELETE">'
                     . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
                         . '</form>';
-                } else {
-                    return '<form action="' . action('IncomeController@destroy', $trans['id']) . '" class="text-center" method="post">'
-                    . '<a href="#" data-title="' . _lang('Update Income') . '" class="btn btn-warning btn-sm disabled"><i class="ti-pencil-alt"></i></a> '
-                    . '<a href="' . action('IncomeController@show', $trans['id']) . '" data-title="' . _lang('View Income') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
-                    . csrf_field()
-                    . '<input name="_method" type="hidden" value="DELETE">'
-                    . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
-                        . '</form>';
+                }
+                elseif(jenis_langganan()=="TRADING")
+                {
+                    if (isset($trans->income_type->name)) {
+                        return '<form action="' . action('IncomeController@destroy', $trans['id']) . '" class="text-center" method="post">'
+                        . '<a href="' . action('IncomeController@edit', $trans['id']) . '" data-title="' . _lang('Update Income') . '" class="btn btn-warning btn-sm ajax-modal"><i class="ti-pencil-alt"></i></a> '
+                        . '<a href="' . action('IncomeController@show', $trans['id']) . '" data-title="' . _lang('View Income') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
+                        . csrf_field()
+                        . '<input name="_method" type="hidden" value="DELETE">'
+                        . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
+                            . '</form>';
+                    } else {
+                        return '<form action="' . action('IncomeController@destroy', $trans['id']) . '" class="text-center" method="post">'
+                        . '<a href="#" data-title="' . _lang('Update Income') . '" class="btn btn-warning btn-sm disabled"><i class="ti-pencil-alt"></i></a> '
+                        . '<a href="' . action('IncomeController@show', $trans['id']) . '" data-title="' . _lang('View Income') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
+                        . csrf_field()
+                        . '<input name="_method" type="hidden" value="DELETE">'
+                        . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
+                            . '</form>';
+                    }
+                }
+                else{
+                    if (isset($trans->income_type->name)) {
+                        return '<form action="' . action('IncomeController@destroy', $trans['id']) . '" class="text-center" method="post">'
+                        . '<a href="' . action('IncomeController@edit', $trans['id']) . '" data-title="' . _lang('Update Income') . '" class="btn btn-warning btn-sm ajax-modal"><i class="ti-pencil-alt"></i></a> '
+                        . '<a href="' . action('IncomeController@show', $trans['id']) . '" data-title="' . _lang('View Income') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
+                        . csrf_field()
+                        . '<input name="_method" type="hidden" value="DELETE">'
+                        . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
+                            . '</form>';
+                    } else {
+                        return '<form action="' . action('IncomeController@destroy', $trans['id']) . '" class="text-center" method="post">'
+                        . '<a href="#" data-title="' . _lang('Update Income') . '" class="btn btn-warning btn-sm disabled"><i class="ti-pencil-alt"></i></a> '
+                        . '<a href="' . action('IncomeController@show', $trans['id']) . '" data-title="' . _lang('View Income') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
+                        . csrf_field()
+                        . '<input name="_method" type="hidden" value="DELETE">'
+                        . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
+                            . '</form>';
+                    }
                 }
             })
             ->setRowId(function ($trans) {
@@ -183,15 +233,28 @@ class IncomeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        $validator = Validator::make($request->all(), [
-            'trans_date'        => 'required',
-            'account_id'        => 'required',
-            'chart_id'          => 'required',
-            'amount'            => 'required|numeric',
-            'payment_method_id' => 'required',
-            'reference'         => 'nullable|max:50',
-            'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
-        ]);
+        if (jenis_langganan()=="POS" || jenis_langganan()=="TRADING")
+        {
+            $validator = Validator::make($request->all(), [
+                'trans_date'        => 'required',
+                'amount'            => 'required|numeric',
+                'payment_method_id' => 'required',
+                'reference'         => 'nullable|max:50',
+                'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+            ]);
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'trans_date'        => 'required',
+                'account_id'        => 'required',
+                'chart_id'          => 'required',
+                'amount'            => 'required|numeric',
+                'payment_method_id' => 'required',
+                'reference'         => 'nullable|max:50',
+                'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+            ]);
+        }
+
 
         if ($validator->fails()) {
             if ($request->ajax()) {
@@ -233,7 +296,32 @@ class IncomeController extends Controller {
         $transaction->chart_id          = $transaction->income_type->name;
         $transaction->payer_payee_id    = isset($transaction->payer->contact_name) ? $transaction->payer->contact_name : '';
         $transaction->payment_method_id = $transaction->payment_method->name;
+        
 
+        if ($transaction->invoice_id!=="" && $transaction->invoice_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE invoice_id=". $transaction->invoice_id); 
+            
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE invoices set paid=". $jmlbayar ." WHERE id=".$transaction->invoice_id);
+            DB::select("UPDATE invoices set status='paid' WHERE grand_total<=paid AND id=".$transaction->invoice_id);
+            DB::select("UPDATE invoices set status='Unpaid' WHERE grand_total>paid AND id=".$transaction->invoice_id);
+        }
+
+        if ($transaction->purchase_return_id!=="" && $transaction->purchase_return_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE purchase_return_id=". $transaction->purchase_return_id); 
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE purchase_return set paid=". $jmlbayar ." WHERE id=".$transaction->purchase_return_id);
+            DB::select("UPDATE purchase_return set payment_status=1 WHERE grand_total<=paid AND id=".$transaction->purchase_return_id);
+            DB::select("UPDATE purchase_return set payment_status=0 WHERE grand_total>paid AND id=".$transaction->purchase_return_id);
+        }
+
+        
         if (!$request->ajax()) {
             return redirect()->route('income.index')->with('success', _lang('Updated Sucessfully'));
         } else {
@@ -257,6 +345,30 @@ class IncomeController extends Controller {
     public function destroy($id) {
         $transaction = Transaction::find($id);
         $transaction->delete();
+
+        if ($transaction->invoice_id!=="" && $transaction->invoice_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE invoice_id=". $transaction->invoice_id); 
+            
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE invoices set paid=". $jmlbayar ." WHERE id=".$transaction->invoice_id);
+            DB::select("UPDATE invoices set status='paid' WHERE grand_total<=paid AND id=".$transaction->invoice_id);
+            DB::select("UPDATE invoices set status='Unpaid' WHERE grand_total>paid AND id=".$transaction->invoice_id);
+        }
+
+        if ($transaction->purchase_return_id!=="" && $transaction->purchase_return_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE purchase_return_id=". $transaction->purchase_return_id); 
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE purchase_return set paid=". $jmlbayar ." WHERE id=".$transaction->purchase_return_id);
+            DB::select("UPDATE purchase_return set payment_status=1 WHERE grand_total<=paid AND id=".$transaction->purchase_return_id);
+            DB::select("UPDATE purchase_return set payment_status=0 WHERE grand_total>paid AND id=".$transaction->purchase_return_id);
+        }
+
         return back()->with('success', _lang('Removed Sucessfully'));
     }
 }

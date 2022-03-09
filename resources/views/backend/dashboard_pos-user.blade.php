@@ -57,17 +57,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1;
-                            ?>
+                            @php
+                                $no = 1;
+                            @endphp
                             @foreach($income_user as $transactionuser)
- 
-                            <tr>
-                                <td class='trans_date'>{{$no}}</td>
-                                <td class='chart_id'>{{$transactionuser->name}}</td>
-                                <td class='amount text-right'>{{ decimalPlace($transactionuser->amount, $currency) }}
-                                </td>
-                            </tr>
-                            <?php $no++;?>
+                                @if(!empty($transactionuser->name!=""))
+                                    <tr>
+                                        <td class='trans_date'>{{$no}}</td>
+                                        <td class='chart_id'>{{$transactionuser->name}}</td>
+                                        <td class='amount text-right'>{{ decimalPlace($transactionuser->amount, $currency) }}
+                                        </td>
+                                    </tr>
+                                    @php 
+                                        $no = $no+1;
+                                    @endphp
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
@@ -92,15 +96,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1;
-                            ?>
+                            @php
+                                $no = 1;
+                            @endphp
                             @foreach($income_produk as $item)
-                            <tr>
-                                <td>{{ $no }}</td>
-                                <td>{{ $item->item_name }}</td>
-                                <td class='amount text-right'>{{ decimalPlace($item->amount, $currency) }}
-                                </td>
-                            </tr>
+                                @if(!empty($item->item_name!=""))
+                                    <tr>
+                                        <td>{{ $no }}</td>
+                                        <td>{{ $item->item_name }}</td>
+                                        <td class='amount text-right'>{{ decimalPlace($item->amount, $currency) }}
+                                        </td>
+                                    </tr>
+                                @endif
+                                @php
+                                    $no = $no+1;
+                                @endphp
                             @endforeach
                         </tbody>
                     </table>

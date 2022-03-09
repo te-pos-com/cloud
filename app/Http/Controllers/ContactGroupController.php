@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ContactGroup;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
 
 class ContactGroupController extends Controller {
 
@@ -51,6 +52,7 @@ class ContactGroupController extends Controller {
                     ->withInput();
             }
         }
+		DB::select("ALTER TABLE contact_groups AUTO_INCREMENT=0");
 
         $contactgroup       = new ContactGroup();
         $contactgroup->name = $request->input('name');

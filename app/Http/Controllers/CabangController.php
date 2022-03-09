@@ -6,6 +6,7 @@ use App\Cabang;
 use App\Gudang;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
 
 class CabangController extends Controller {
 
@@ -48,7 +49,6 @@ class CabangController extends Controller {
     public function store(Request $request) {
         $validator = Validator::make($request->all(), [
             'cabang_name' => 'required|max:191',
-            'cabang_alamat' => 'required|max:191',
         ]);
 
         if ($validator->fails()) {
@@ -61,6 +61,7 @@ class CabangController extends Controller {
             }
         }
 
+        DB::select("ALTER TABLE cabang AUTO_INCREMENT=0");
         $cabang = new Cabang();
         $cabang->cabang_name = $request->input('cabang_name');
         $cabang->cabang_phone = $request->input('cabang_phone');
@@ -103,7 +104,6 @@ class CabangController extends Controller {
     public function update(Request $request, $id) {
         $validator = Validator::make($request->all(), [
             'cabang_name' => 'required|max:191',
-            'cabang_alamat' => 'required|max:191',
         ]);
 
         if ($validator->fails()) {

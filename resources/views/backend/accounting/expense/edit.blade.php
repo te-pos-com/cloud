@@ -21,33 +21,36 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <a href="{{ route('accounts.create') }}" data-reload="false"
-                                    data-title="{{ _lang('Create Account') }}" class="ajax-modal-2 select2-add"><i
-                                        class="ti-plus"></i> {{ _lang('Add New') }}</a>
-                                <label class="control-label">{{ _lang('Account') }}</label>
-                                <select class="form-control select2-ajax" data-value="id" data-display="account_title"
-                                    data-table="accounts" data-where="1" name="account_id" required>
-                                    <option value="">{{ _lang('Select One') }}</option>
-                                    {{ create_option("accounts","id","account_title",$transaction->account_id,array("jenis=" => "D"," and company_id=" => company_id()))}}
-                                </select>
+                        @if (jenis_langganan()=="POS" || jenis_langganan()=="TRADING")
+                        @else 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <a href="{{ route('accounts.create') }}" data-reload="false"
+                                        data-title="{{ _lang('Create Account') }}" class="ajax-modal-2 select2-add"><i
+                                            class="ti-plus"></i> {{ _lang('Add New') }}</a>
+                                    <label class="control-label">{{ _lang('Account') }}</label>
+                                    <select class="form-control select2-ajax" data-value="id" data-display="account_title"
+                                        data-table="accounts" data-where="1" name="account_id" required>
+                                        <option value="">{{ _lang('Select One') }}</option>
+                                        {{ create_option("accounts","id","account_title",$transaction->account_id,array("jenis=" => "D"," and company_id=" => company_id()))}}
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <a href="{{ route('chart_of_accounts.create') }}" data-reload="false"
-                                    data-title="{{ _lang('Add Income/Expense Type') }}"
-                                    class="ajax-modal-2 select2-add"><i class="ti-plus"></i> {{ _lang('Add New') }}</a>
-                                <label class="control-label">{{ _lang('Expense Type') }}</label>
-                                <select class="form-control select2-ajax" data-value="id" data-display="name"
-                                    data-table="chart_of_accounts" data-where="4" name="chart_id" required>
-                                    <option value="">{{ _lang('Select One') }}</option>
-                                    {{ create_option("chart_of_accounts","id","name",$transaction->chart_id,array("type="=>"expense","AND company_id="=>company_id())) }}
-                                </select>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <a href="{{ route('chart_of_accounts.create') }}" data-reload="false"
+                                        data-title="{{ _lang('Add Income/Expense Type') }}"
+                                        class="ajax-modal-2 select2-add"><i class="ti-plus"></i> {{ _lang('Add New') }}</a>
+                                    <label class="control-label">{{ _lang('Expense Type') }}</label>
+                                    <select class="form-control select2-ajax" data-value="id" data-display="name"
+                                        data-table="chart_of_accounts" data-where="4" name="chart_id" required>
+                                        <option value="">{{ _lang('Select One') }}</option>
+                                        {{ create_option("chart_of_accounts","id","name",$transaction->chart_id,array("type="=>"expense","AND company_id="=>company_id())) }}
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @endif
 
                         <div class="col-md-6">
                             <div class="form-group">

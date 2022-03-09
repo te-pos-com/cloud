@@ -4,7 +4,7 @@
 
     <div class="col-12">
         <div class="row">
-            @if (jenis_langganan()=="POS")
+            @if (jenis_langganan()=="POS"||jenis_langganan()=="TRADING")
             @else
                 <div class="col-md-6">
                     <div class="form-group">
@@ -68,7 +68,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="control-label">{{ _lang('Reference') }}</label>
-                    <input type="text" class="form-control" name="reference" value="{{ old('reference') }}">
+                    <input type="text" class="form-control" name="reference" value="{{ $pembelian->invoice_number }}">
                 </div>
             </div>
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\ProductMerek;
 use Illuminate\Http\Request;
 use Validator;
-
+use DB;
 class ProductMerekController extends Controller {
 
     /**
@@ -51,6 +51,7 @@ class ProductMerekController extends Controller {
                     ->withInput();
             }
         }
+		DB::select("ALTER TABLE product_merek AUTO_INCREMENT=0");
 
         $productmerek            = new ProductMerek();
         $productmerek->merek_name = $request->input('merek_name');

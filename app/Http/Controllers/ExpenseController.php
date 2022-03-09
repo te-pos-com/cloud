@@ -6,6 +6,7 @@ use App\Transaction;
 use DataTables;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
 
 class ExpenseController extends Controller {
 
@@ -21,15 +22,23 @@ class ExpenseController extends Controller {
     public function get_table_data() {
 
         $currency = currency();
-
-        $transactions = Transaction::with("account")
+        if (jenis_langganan()=="POS" || jenis_langganan()=="TRADING"){
+            $transactions = Transaction::with("expense_type")
+            ->with("payee")
+            ->with("payment_method")
+            ->select('transactions.*')
+            ->where("transactions.dr_cr", "dr")
+            ->orderBy("transactions.id", "desc");
+        }
+        else{
+            $transactions = Transaction::with("account")
             ->with("expense_type")
             ->with("payee")
             ->with("payment_method")
             ->select('transactions.*')
             ->where("transactions.dr_cr", "dr")
             ->orderBy("transactions.id", "desc");
-
+        }
         return Datatables::eloquent($transactions)
             ->editColumn('amount', function ($trans) use ($currency) {
                 return "<span class='float-right'>" . $currency . " " . decimalPlace($trans->amount) . "</span>";
@@ -41,22 +50,35 @@ class ExpenseController extends Controller {
                 return isset($trans->expense_type->name) ? $trans->expense_type->name : _lang('Transfer');
             })
             ->addColumn('action', function ($trans) {
-                if (isset($trans->expense_type->name)) {
-                    return '<form action="' . action('ExpenseController@destroy', $trans['id']) . '" class="text-center" method="post">'
-                    . '<a href="' . action('ExpenseController@edit', $trans['id']) . '" data-title="' . _lang('Update Expense') . '" class="btn btn-warning btn-sm ajax-modal"><i class="ti-pencil-alt"></i></a> '
-                    . '<a href="' . action('ExpenseController@show', $trans['id']) . '" data-title="' . _lang('View Expense') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
-                    . csrf_field()
-                    . '<input name="_method" type="hidden" value="DELETE">'
-                    . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
-                        . '</form>';
-                } else {
-                    return '<form action="' . action('ExpenseController@destroy', $trans['id']) . '" class="text-center" method="post">'
-                    . '<a href="#" data-title="' . _lang('Update Expense') . '" class="btn btn-warning btn-sm disabled"><i class="ti-pencil-alt"></i></a> '
-                    . '<a href="' . action('ExpenseController@show', $trans['id']) . '" data-title="' . _lang('View Expense') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
-                    . csrf_field()
-                    . '<input name="_method" type="hidden" value="DELETE">'
-                    . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
-                        . '</form>';
+                if (jenis_langganan()=="POS" || jenis_langganan()=="TRADING"){
+                    {
+                        return '<form action="' . action('ExpenseController@destroy', $trans['id']) . '" class="text-center" method="post">'
+                        . '<a href="' . action('ExpenseController@edit', $trans['id']) . '" data-title="' . _lang('Update Expense') . '" class="btn btn-warning btn-sm ajax-modal"><i class="ti-pencil-alt"></i></a> '
+                        . '<a href="' . action('ExpenseController@show', $trans['id']) . '" data-title="' . _lang('View Expense') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
+                        . csrf_field()
+                        . '<input name="_method" type="hidden" value="DELETE">'
+                        . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
+                            . '</form>';
+                    }
+                }
+                else{
+                    if (isset($trans->expense_type->name)) {
+                        return '<form action="' . action('ExpenseController@destroy', $trans['id']) . '" class="text-center" method="post">'
+                        . '<a href="' . action('ExpenseController@edit', $trans['id']) . '" data-title="' . _lang('Update Expense') . '" class="btn btn-warning btn-sm ajax-modal"><i class="ti-pencil-alt"></i></a> '
+                        . '<a href="' . action('ExpenseController@show', $trans['id']) . '" data-title="' . _lang('View Expense') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
+                        . csrf_field()
+                        . '<input name="_method" type="hidden" value="DELETE">'
+                        . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
+                            . '</form>';
+                    } else {
+                        return '<form action="' . action('ExpenseController@destroy', $trans['id']) . '" class="text-center" method="post">'
+                        . '<a href="#" data-title="' . _lang('Update Expense') . '" class="btn btn-warning btn-sm disabled"><i class="ti-pencil-alt"></i></a> '
+                        . '<a href="' . action('ExpenseController@show', $trans['id']) . '" data-title="' . _lang('View Expense') . '" class="btn btn-info btn-sm ajax-modal"><i class="ti-eye"></i></a> '
+                        . csrf_field()
+                        . '<input name="_method" type="hidden" value="DELETE">'
+                        . '<button class="btn btn-danger btn-sm btn-remove" type="submit"><i class="ti-trash"></i></button>'
+                            . '</form>';
+                    }
                 }
             })
             ->setRowId(function ($trans) {
@@ -184,15 +206,26 @@ class ExpenseController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        $validator = Validator::make($request->all(), [
-            'trans_date'        => 'required',
-            'account_id'        => 'required',
-            'chart_id'          => 'required',
-            'amount'            => 'required|numeric',
-            'payment_method_id' => 'required',
-            'reference'         => 'nullable|max:50',
-            'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
-        ]);
+        if (jenis_langganan()=="POS" || jenis_langganan()=="TRADING"){
+            $validator = Validator::make($request->all(), [
+                'trans_date'        => 'required',
+                'amount'            => 'required|numeric',
+                'payment_method_id' => 'required',
+                'reference'         => 'nullable|max:50',
+                'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+            ]);
+        }
+        else{
+            $validator = Validator::make($request->all(), [
+                'trans_date'        => 'required',
+                'account_id'        => 'required',
+                'chart_id'          => 'required',
+                'amount'            => 'required|numeric',
+                'payment_method_id' => 'required',
+                'reference'         => 'nullable|max:50',
+                'attachment'        => 'nullable|mimes:jpeg,png,jpg,doc,pdf,docx,zip',
+            ]);
+        }
 
         if ($validator->fails()) {
             if ($request->ajax()) {
@@ -235,6 +268,30 @@ class ExpenseController extends Controller {
         $transaction->payer_payee_id    = isset($transaction->payee->contact_name) ? $transaction->payee->contact_name : '';
         $transaction->payment_method_id = $transaction->payment_method->name;
 
+
+        if ($transaction->pembelian_id!=="" && $transaction->pembelian_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE pembelian_id=". $transaction->pembelian_id); 
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE pembelian set paid=". $jmlbayar ." WHERE id=".$transaction->pembelian_id);
+            DB::select("UPDATE pembelian set payment_status=1 WHERE grand_total<=paid AND id=".$transaction->pembelian_id);
+            DB::select("UPDATE pembelian set payment_status=0 WHERE grand_total>paid AND id=".$transaction->pembelian_id);
+        }
+
+
+        if ($transaction->sales_return_id!=="" && $transaction->sales_return_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE sales_return_id=". $transaction->sales_return_id); 
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE sales_return set paid=". $jmlbayar ." WHERE id=".$transaction->sales_return_id);
+            DB::select("UPDATE sales_return set payment_status=1 WHERE grand_total<=paid AND id=".$transaction->sales_return_id);
+            DB::select("UPDATE sales_return set payment_status=0 WHERE grand_total>paid AND id=".$transaction->sales_return_id);
+        }
+        
         if (!$request->ajax()) {
             return redirect()->route('expense.index')->with('success', _lang('Updated Sucessfully'));
         } else {
@@ -258,6 +315,29 @@ class ExpenseController extends Controller {
     public function destroy($id) {
         $transaction = Transaction::find($id);
         $transaction->delete();
+
+        if ($transaction->pembelian_id!=="" && $transaction->pembelian_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE pembelian_id=". $transaction->pembelian_id); 
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE pembelian set paid=". $jmlbayar ." WHERE id=".$transaction->pembelian_id);
+            DB::select("UPDATE pembelian set payment_status=1 WHERE grand_total<=paid AND id=".$transaction->pembelian_id);
+            DB::select("UPDATE pembelian set payment_status=0 WHERE grand_total>paid AND id=".$transaction->pembelian_id);
+        }
+
+        if ($transaction->sales_return_id!=="" && $transaction->sales_return_id!==NULL){
+            $jmlbayar = 0;
+            $totalbayar =  DB::select("SELECT sum(amount) as amount FROM transactions WHERE sales_return_id=". $transaction->sales_return_id); 
+            if (!empty($totalbayar[0]->amount)){
+                $jmlbayar=$totalbayar[0]->amount;
+            }
+            DB::select("UPDATE sales_return set paid=". $jmlbayar ." WHERE id=".$transaction->sales_return_id);
+            DB::select("UPDATE sales_return set payment_status=1 WHERE grand_total<=paid AND id=".$transaction->sales_return_id);
+            DB::select("UPDATE sales_return set payment_status=0 WHERE grand_total>paid AND id=".$transaction->sales_return_id);
+        }
+       
         return back()->with('success', _lang('Removed Sucessfully'));
     }
 }

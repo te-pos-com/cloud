@@ -68,6 +68,14 @@
                         </div>
 
                         @if (jenis_langganan()=="POS")
+                        @elseif (jenis_langganan()=="TRADING")
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">{{ _lang('Due Date') }}</label>
+                                    <input type="text" class="form-control datepicker" name="due_date"
+                                        value="{{ old('due_date') }}" required>
+                                </div>
+                            </div>
                         @else
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -103,6 +111,19 @@
                         </div>
 
                         @if (jenis_langganan()=="POS")
+                        @elseif (jenis_langganan()=="TRADING")
+                            <div class="col-md-6">
+                                <div class="form-group select-product-container">
+                                    <a href="{{ route('services.create') }}" data-reload="false"
+                                        data-title="{{ _lang('Add Service') }}" class="ajax-modal select2-add"><i
+                                            class="ti-plus"></i> {{ _lang('Add New') }}</a>
+                                    <label class="control-label">{{ _lang('Select Service') }}</label>
+                                    <select class="form-control select2-ajax" data-value="id" data-display="item_name"
+                                        data-table="items" data-where="5" name="service" id="service">
+                                        <option value="">{{ _lang('Select Service') }}</option>
+                                    </select>
+                                </div>
+                            </div>                        
                         @else
                             <div class="col-md-6">
                                 <div class="form-group select-product-container">

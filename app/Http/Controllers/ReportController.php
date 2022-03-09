@@ -801,33 +801,59 @@ class ReportController extends Controller {
         if ($view == "") {
             return view('reports.income_report');
         } else {
-            $date1      = $request->date1;
-            $date2      = $request->date2;
-            $account    = $request->account;
-            $customer   = $request->customer;
-            $category   = $request->category;
-            $company_id = company_id();
+            if(jenis_langganan()=="POS"){
+                $date1      = $request->date1;
+                $date2      = $request->date2;
+                $customer   = $request->customer;
+                $company_id = company_id();
 
-            $customer_query = $customer != '' ? 'AND transactions.payer_payee_id = ' . $customer : '';
-            $account_query  = $account != '' ? 'AND transactions.account_id = ' . $account : '';
-            $category_query = $category != '' ? 'AND transactions.chart_id = ' . $category : '';
+                $customer_query = $customer != '' ? 'AND transactions.payer_payee_id = ' . $customer : '';
+                
+                $data = array();
 
-            $data = array();
+                $data['report_data'] = DB::select("SELECT transactions.reference,transactions.trans_date,transactions.note,SUM(transactions.amount) as amount
+                FROM transactions
+                WHERE transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='cr' $customer_query AND transactions.company_id='$company_id' 
+                GROUP BY transactions.chart_id
+                UNION ALL
+                SELECT '','$date2','Total',SUM(transactions.amount) as amount FROM transactions WHERE transactions.trans_date
+                BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='cr' $customer_query AND transactions.company_id='$company_id'");
 
-            $data['report_data'] = DB::select("SELECT transactions.trans_date,chart_of_accounts.name as income_type,transactions.note,accounts.account_title as account,SUM(transactions.amount) as amount
-			FROM transactions JOIN accounts ON transactions.account_id = accounts.id LEFT JOIN chart_of_accounts ON transactions.chart_id=chart_of_accounts.id
-			WHERE transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='cr' $category_query $account_query $customer_query AND transactions.company_id='$company_id' 
-            GROUP BY transactions.chart_id
-			UNION ALL
-			SELECT '$date2','Total Amount','','',SUM(transactions.amount) as amount FROM transactions,accounts WHERE transactions.account_id = accounts.id AND transactions.trans_date
-			BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='cr' $category_query $account_query $customer_query AND transactions.company_id='$company_id'");
+                $data['date1']    = $request->date1;
+                $data['date2']    = $request->date2;
+                $data['customer'] = $request->customer;
+                return view('reports.income_report', $data);
+            }
 
-            $data['date1']    = $request->date1;
-            $data['date2']    = $request->date2;
-            $data['account']  = $request->account;
-            $data['customer'] = $request->customer;
-            $data['category'] = $request->category;
-            return view('reports.income_report', $data);
+            else{
+                $date1      = $request->date1;
+                $date2      = $request->date2;
+                $account    = $request->account;
+                $customer   = $request->customer;
+                $category   = $request->category;
+                $company_id = company_id();
+
+                $customer_query = $customer != '' ? 'AND transactions.payer_payee_id = ' . $customer : '';
+                $account_query  = $account != '' ? 'AND transactions.account_id = ' . $account : '';
+                $category_query = $category != '' ? 'AND transactions.chart_id = ' . $category : '';
+
+                $data = array();
+
+                $data['report_data'] = DB::select("SELECT transactions.trans_date,chart_of_accounts.name as income_type,transactions.note,accounts.account_title as account,SUM(transactions.amount) as amount
+                FROM transactions JOIN accounts ON transactions.account_id = accounts.id LEFT JOIN chart_of_accounts ON transactions.chart_id=chart_of_accounts.id
+                WHERE transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='cr' $category_query $account_query $customer_query AND transactions.company_id='$company_id' 
+                GROUP BY transactions.chart_id
+                UNION ALL
+                SELECT '$date2','Total Amount','','',SUM(transactions.amount) as amount FROM transactions,accounts WHERE transactions.account_id = accounts.id AND transactions.trans_date
+                BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='cr' $category_query $account_query $customer_query AND transactions.company_id='$company_id'");
+
+                $data['date1']    = $request->date1;
+                $data['date2']    = $request->date2;
+                $data['account']  = $request->account;
+                $data['customer'] = $request->customer;
+                $data['category'] = $request->category;
+                return view('reports.income_report', $data);
+            }
         }
 
     }
@@ -837,28 +863,48 @@ class ReportController extends Controller {
         if ($view == "") {
             return view('reports.expense_report');
         } else {
-            $date1      = $request->date1;
-            $date2      = $request->date2;
-            $account    = $request->account;
-            $category   = $request->category;
-            $company_id = company_id();
-
-            $account_query  = $account != '' ? 'AND transactions.account_id = ' . $account : '';
-            $category_query = $category != '' ? 'AND transactions.chart_id = ' . $category : '';
-
-            $data       = array();
-
-            $data['report_data'] = DB::select("SELECT transactions.trans_date,chart_of_accounts.name as expense_type,transactions.note,accounts.account_title as account,sum(transactions.amount) as amount
-			FROM transactions JOIN accounts ON transactions.account_id = accounts.id LEFT JOIN chart_of_accounts ON transactions.chart_id=chart_of_accounts.id
-			WHERE transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='dr' $account_query $category_query AND transactions.company_id='$company_id' GROUP BY transactions.chart_id
-            UNION ALL
-			SELECT '$date2','Total Amount','','',SUM(transactions.amount) as amount FROM transactions,accounts WHERE transactions.account_id = accounts.id AND transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='dr' AND transactions.company_id='$company_id'");
-
-            $data['date1'] = $request->date1;
-            $data['date2'] = $request->date2;
-            $data['account']  = $request->account;
-            $data['category'] = $request->category;
-            return view('reports.expense_report', $data);
+            if (jenis_langganan()=="POS")
+            {
+                $date1      = $request->date1;
+                $date2      = $request->date2;
+                $company_id = company_id();
+    
+                $data       = array();
+    
+                $data['report_data'] = DB::select("SELECT transactions.reference,transactions.trans_date,transactions.note,sum(transactions.amount) as amount
+                FROM transactions
+                WHERE transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='dr' AND transactions.company_id='$company_id' GROUP BY transactions.chart_id
+                UNION ALL
+                SELECT '','$date2','Total Amount',SUM(transactions.amount) as amount FROM transactions WHERE  transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='dr' AND transactions.company_id='$company_id'");
+    
+                $data['date1'] = $request->date1;
+                $data['date2'] = $request->date2;
+                return view('reports.expense_report', $data);    
+            }
+            else{
+                $date1      = $request->date1;
+                $date2      = $request->date2;
+                $account    = $request->account;
+                $category   = $request->category;
+                $company_id = company_id();
+    
+                $account_query  = $account != '' ? 'AND transactions.account_id = ' . $account : '';
+                $category_query = $category != '' ? 'AND transactions.chart_id = ' . $category : '';
+    
+                $data       = array();
+    
+                $data['report_data'] = DB::select("SELECT transactions.trans_date,chart_of_accounts.name as expense_type,transactions.note,accounts.account_title as account,sum(transactions.amount) as amount
+                FROM transactions JOIN accounts ON transactions.account_id = accounts.id LEFT JOIN chart_of_accounts ON transactions.chart_id=chart_of_accounts.id
+                WHERE transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='dr' $account_query $category_query AND transactions.company_id='$company_id' GROUP BY transactions.chart_id
+                UNION ALL
+                SELECT '$date2','Total Amount','','',SUM(transactions.amount) as amount FROM transactions,accounts WHERE transactions.account_id = accounts.id AND transactions.trans_date BETWEEN '$date1' AND '$date2' AND transactions.dr_cr='dr' AND transactions.company_id='$company_id'");
+    
+                $data['date1'] = $request->date1;
+                $data['date2'] = $request->date2;
+                $data['account']  = $request->account;
+                $data['category'] = $request->category;
+                return view('reports.expense_report', $data);    
+            }
         }
 
     }

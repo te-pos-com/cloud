@@ -11,6 +11,7 @@ use App\Quotation;
 use App\QuotationItem;
 use App\QuotationItemTax;
 use App\Stock;
+use App\Hpp;
 use App\Tax;
 use App\Utilities\Overrider;
 use DataTables;
@@ -51,20 +52,31 @@ class QuotationController extends Controller {
                 return "<span class='float-right'>" . decimalPlace($quotation->grand_total, $currency) . "</span>";
             })
             ->addColumn('action', function ($quotation) {
-                return '<div class="dropdown text-center">'
-                . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
-                . '<i class="mdi mdi-chevron-down"></i></button>'
-                . '<div class="dropdown-menu">'
-                . '<a class="dropdown-item" href="' . action('QuotationController@edit', $quotation->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a></li>'
-                . '<a class="dropdown-item" href="' . action('QuotationController@show', $quotation->id) . '"><i class="ti-eye"></i> ' . _lang('View') . '</a></li>'
-                . '<a class="dropdown-item" href="' . action('QuotationController@convert_invoice', $quotation->id) . '"><i class="ti-exchange-vertical"></i> ' . _lang('Convert to Invoice') . '</a></li>'
-                . '<form action="' . action('QuotationController@destroy', $quotation['id']) . '" method="post">'
-                . csrf_field()
-                . '<input name="_method" type="hidden" value="DELETE">'
-                . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
-                    . '</form>'
+                if ($quotation->status==0){
+                    return '<div class="dropdown text-center">'
+                    . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
+                    . '<i class="mdi mdi-chevron-down"></i></button>'
+                    . '<div class="dropdown-menu">'
+                    . '<a class="dropdown-item" href="' . action('QuotationController@edit', $quotation->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a></li>'
+                    . '<a class="dropdown-item" href="' . action('QuotationController@show', $quotation->id) . '"><i class="ti-eye"></i> ' . _lang('View') . '</a></li>'
+                    . '<a class="dropdown-item" href="' . action('QuotationController@convert_invoice', $quotation->id) . '"><i class="ti-exchange-vertical"></i> ' . _lang('Convert to Invoice') . '</a></li>'
+                    . '<form action="' . action('QuotationController@destroy', $quotation['id']) . '" method="post">'
+                    . csrf_field()
+                    . '<input name="_method" type="hidden" value="DELETE">'
+                    . '<button class="button-link btn-remove" type="submit"><i class="ti-trash"></i> ' . _lang('Delete') . '</button>'
+                        . '</form>'
+                        . '</div>'
+                        . '</div>';
+                }
+                else{
+                    return '<div class="dropdown text-center">'
+                    . '<button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">' . _lang('Action')
+                    . '<i class="mdi mdi-chevron-down"></i></button>'
+                    . '<div class="dropdown-menu">'
+                    . '<a class="dropdown-item" href="' . action('QuotationController@show', $quotation->id) . '"><i class="ti-eye"></i> ' . _lang('View') . '</a></li>'
                     . '</div>'
                     . '</div>';
+                }
             })
             ->setRowId(function ($invoice) {
                 return "row_" . $invoice->id;
@@ -123,6 +135,8 @@ class QuotationController extends Controller {
         $quotation->grand_total      = $request->product_total + $request->tax_total;
         $quotation->tax_total        = $request->input('tax_total');
         $quotation->note             = $request->input('note');
+        $quotation->status           = 0;
+        $quotation->user_id          = user_id();
 
         $quotation->save();
 
@@ -161,7 +175,9 @@ class QuotationController extends Controller {
         }
 
         //Increment quotation Starting number
-        increment_quotation_number();
+        if(is_numeric(get_company_option('quotation_starting'))==true){
+            increment_quotation_number();
+        }
 
         DB::commit();
 
@@ -244,6 +260,7 @@ class QuotationController extends Controller {
         $quotation->grand_total      = $request->product_total + $request->tax_total;
         $quotation->tax_total        = $request->input('tax_total');
         $quotation->note             = $request->input('note');
+        $quotation->user_id_update   = user_id();
 
         $quotation->save();
 
@@ -366,7 +383,9 @@ class QuotationController extends Controller {
         $invoice->tax_total      = $quotation->tax_total;
         $invoice->paid           = 0;
         $invoice->status         = 'Unpaid';
+        $invoice->quotation_id   = $quotation->id;
         $invoice->note           = $quotation->note;
+        $invoice->user_id        = user_id();
 
         $invoice->save();
 
@@ -384,7 +403,7 @@ class QuotationController extends Controller {
             $invoiceItem->discount    = $quotation_item->discount;
             $invoiceItem->tax_amount  = $quotation_item->tax_amount;
             $invoiceItem->sub_total   = $quotation_item->sub_total;
-            $hpp_old = Hpp::where("stok_sisa",">=",$request->quantity[$i])
+            $hpp_old = Hpp::where("stok_sisa",">=",$quotation_item->quantity)
             ->where("item_id",$quotation_item->item_id)->where("gudang_id",$quotation_item->gudang_id)
             ->where("flag","<=",5)
             ->orderby("created_at","desc")->first();
@@ -434,7 +453,9 @@ class QuotationController extends Controller {
 
         }
         //Increment Invoice Starting number
-        increment_invoice_number();
+        if(is_numeric(get_company_option('invoice_starting'))==true){
+            increment_invoice_number();
+        }
 
         $quotation->status     = 1;
         $quotation->invoice_id = $invoice->id;

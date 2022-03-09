@@ -55,7 +55,31 @@ class PermissionController extends Controller
 				'App\Http\Controllers\ExpenseController',	
 				'App\Http\Controllers\AccountController',	
 			);
-		}else{
+		}
+		elseif (jenis_langganan()=="TRADING"){
+			$notallowed = array(
+				'\App\Http\Controllers\Auth\LoginController',
+				'App\Http\Controllers\Auth\LoginController',
+				'App\Http\Controllers\Auth\RegisterController',
+				'App\Http\Controllers\Auth\ForgotPasswordController',
+				'App\Http\Controllers\Auth\ResetPasswordController',
+				'App\Http\Controllers\Auth\ConfirmPasswordController',
+				'App\Http\Controllers\Auth\VerificationController',
+				'App\Http\Controllers\ProfileController',
+				'App\Http\Controllers\UserController',
+				'App\Http\Controllers\RoleController',
+				'App\Http\Controllers\LanguageController',
+				'App\Http\Controllers\UtilityController',
+				'App\Http\Controllers\EmailTemplateController',
+				'App\Http\Controllers\PermissionController',
+				'App\Http\Controllers\ClientController',
+				'App\Http\Controllers\MembershipController',
+				'App\Http\Controllers\Select2Controller',
+				'App\Http\Controllers\Install\InstallController',
+				'App\Http\Controllers\Install\UpdateController',	
+			);
+		}
+		else{
 			$notallowed = array(
 				'\App\Http\Controllers\Auth\LoginController',
 				'App\Http\Controllers\Auth\LoginController',

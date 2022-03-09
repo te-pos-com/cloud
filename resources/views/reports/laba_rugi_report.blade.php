@@ -31,7 +31,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Cabang') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="cabang"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('cabang','id','cabang_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -42,7 +42,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Customer') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="customer"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('contacts','id','contact_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -68,6 +68,4 @@
 @endsection
 
 
-@section('js-script')
 <script src="{{ asset('public/backend/assets/js/datatables/laba-rugi-teble-report.js?v=1.1') }}"></script>
-@endsection

@@ -16,8 +16,8 @@
 					name: "account.account_title"
 				},
 				{
-					data: "expense_type.name",
-					name: "expense_type.name"
+					data: "reference",
+					name: "reference"
 				},
 				{
 					data: "amount",

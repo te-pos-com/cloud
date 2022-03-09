@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Purchase;
 use App\PurchaseOrderItem;
 use App\PurchaseOrderItemTax;
+use App\Pembelian;
+use App\PembelianItem;
+use App\PembelianItemTax;
 use App\Stock;
 use App\Tax;
+use App\Hpp;
 use App\Transaction;
 use DataTables;
 use DB;
@@ -75,6 +79,8 @@ class PurchaseController extends Controller {
                 . '<div class="dropdown-menu">';
                 if ($purchase->order_status != 3) {
                     $return = $return . '<a class="dropdown-item" href="' . action('PurchaseController@edit', $purchase->id) . '"><i class="ti-pencil-alt"></i> ' . _lang('Edit') . '</a>';
+                    $return = $return . '<a class="dropdown-item" href="' . action('PurchaseController@convert_pembelian', $purchase->id) . '"><i class="ti-exchange-vertical"></i> ' . _lang('Konversikan Ke Pembelian') . '</a></li>';
+                
                 }
                 
                 $return = $return . '<a class="dropdown-item" href="' . action('PurchaseController@show', $purchase->id) . '" data-title="' . _lang('View Invoice') . '" data-fullscreen="true"><i class="ti-eye"></i> ' . _lang('View') . '</a>';
@@ -164,6 +170,7 @@ class PurchaseController extends Controller {
         $purchase->payment_status = 0;
         $purchase->attachemnt     = $attachemnt;
         $purchase->note           = $request->input('note');
+        $purchase->user_id        = user_id();
 
         $purchase->save();
 
@@ -206,10 +213,10 @@ class PurchaseController extends Controller {
                 $stock->save();
             }
         }
-        
-        //Increment Invoice Starting number
-        increment_orderpembelian_number();
-
+        if (get_company_option('invoice_order_pembelian')!=""){
+            //Increment Invoice Starting number
+            increment_orderpembelian_number();
+        }
 
         DB::commit();
 
@@ -219,6 +226,107 @@ class PurchaseController extends Controller {
             return response()->json(['result' => 'success', 'action' => 'store', 'message' => _lang('Purchase Order Created Sucessfully'), 'data' => $purchase]);
         }
 
+    }
+
+
+    public function convert_pembelian($id){
+            @ini_set('max_execution_time', 0);
+            @set_time_limit(0);
+    
+            DB::beginTransaction();
+    
+            $purchase_orders = Purchase::where('id', $id)->where('status', 0)->first();
+    
+            if (!$purchase_orders) {
+                return back()->with('error', _lang('Sorry, Purchase_orders is already converted to Pembelian !'));
+            }
+    
+            $pembelian                 = new Pembelian();
+            $pembelian->order_date     = date('Y-m-d');
+            $pembelian->supplier_id    = $purchase_orders->supplier_id;
+            $pembelian->invoice_number = get_company_option('invoice_pembelian_perfix') . get_company_option('invoice_pembelian');
+            $pembelian->cabang_id      = $purchase_orders->cabang_id;
+            $pembelian->order_status   = "0";
+            $pembelian->order_discount = $purchase_orders->order_discount;
+            $pembelian->shipping_cost  = $purchase_orders->shipping_cost;
+            $pembelian->product_total  = $purchase_orders->product_total;
+            $pembelian->order_tax      = $purchase_orders->tax_total;
+            $pembelian->grand_total    = $purchase_orders->grand_total;
+            $pembelian->paid           = 0;
+            $pembelian->payment_status = 0;
+            $pembelian->user_id        = user_id();
+            $pembelian->po_number      = $purchase_orders->id;
+            $pembelian->attachemnt     = $purchase_orders->attachemnt;
+            $pembelian->note           = $purchase_orders->note;
+            $pembelian->user_id        = user_id();
+    
+            $pembelian->save();
+            $taxes = Tax::all();
+
+            //Save Purcahse item
+            foreach ($purchase_orders->purchase_items as $purchase_orders_item) {
+                $pembelianItem                    = new PembelianItem();
+                $pembelianItem->pembelian_id      = $pembelian->id;
+                $pembelianItem->product_id        = $purchase_orders_item->product_id;
+                $pembelianItem->gudang_id         = $purchase_orders_item->gudang_id;
+                $pembelianItem->description       = $purchase_orders_item->description;
+                $pembelianItem->quantity          = $purchase_orders_item->quantity;
+                $pembelianItem->unit_cost         = $purchase_orders_item->unit_cost;
+                $pembelianItem->discount          = $purchase_orders_item->discount;
+                $pembelianItem->tax_amount        = $purchase_orders_item->product_tax;
+                $pembelianItem->sub_total         = $purchase_orders_item->sub_total;
+                $pembelianItem->save();
+    
+    
+    
+                $hpp                        = new Hpp();
+                $hpp->transaksi_id          = $pembelian->id;
+                $hpp->transaksi_item_id     = $pembelianItem->id;
+                $hpp->item_id               = $purchase_orders_item->product_id;
+                $hpp->invoice_number        = $pembelian->invoice_number;
+                $hpp->gudang_id             = $purchase_orders_item->gudang_id;
+                $hpp->cabang_id             = $purchase_orders->cabang_id;
+                $hpp->flag                  = 1;
+                $hpp->stok                  = $hpp->stok + $pembelianItem->quantity;
+                $hpp->stok_sisa             = $hpp->stok-$hpp->stok_terpakai; 
+                $hpp->harga                 = $purchase_orders_item->sub_total;
+                $hpp->save();
+    
+                //Store Pembelian Taxes
+                foreach ($purchase_orders_item->taxes as $purchase_orders_tax) {
+                        $tax = $taxes->firstWhere('id', $purchase_orders_tax->tax_id);
+
+                        $PembelianItemTax                         = new PembelianItemTax();
+                        $PembelianItemTax->purchase_order_id      = $PembelianItem->pembelian_id;
+                        $PembelianItemTax->pembelian_item_id      = $PembelianItem->id;
+                        $PembelianItemTax->tax_id                 = $tax->id;
+                        $tax_type                                 = $tax->type == 'percent' ? '%' : '';
+                        $PembelianItemTax->name                   = $tax->tax_name . ' @ ' . $tax->rate . $tax_type;
+                        $PembelianItemTax->amount                 = $tax->type == 'percent' ? ($purchaseItem->sub_total / 100) * $tax->rate : $tax->rate;
+                        $PembelianItemTax->save();
+                }
+    
+                //Update Stock if Order Status is received
+                //if ($request->input('order_status') == '3') {
+                    $stock           = Stock::where("product_id", $pembelianItem->product_id)->first();
+                    $stock->quantity = $stock->quantity + $pembelianItem->quantity;
+                    $stock->save();   
+    
+                //}
+            
+                
+            }
+            if(is_numeric(get_company_option('invoice_pembelian'))==true){
+                increment_pembelian_number();
+            }
+
+            $purchase_orders->order_status     = 3;
+            $purchase_orders->save();
+
+            DB::commit();
+    
+            return redirect('purchase_orders/' . $purchase_orders->id)->with('success', _lang('Purchase Order Converted Sucessfully'));
+    
     }
 
     /**
@@ -332,7 +440,7 @@ class PurchaseController extends Controller {
         $purchase->product_total  = $request->input('product_total');
         $purchase->order_tax      = $request->tax_total;
         $purchase->grand_total    = ($purchase->product_total + $purchase->shipping_cost + $purchase->order_tax) - $purchase->order_discount;
-
+        $purchase->user_id_update  = user_id();
         $purchase->payment_status = $request->input('payment_status');
 
         if (round($purchase->paid, 2) < $purchase->grand_total) {

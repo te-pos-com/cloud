@@ -15,7 +15,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Cabang') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="cabang"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('cabang','id','cabang_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Gudang') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="gudang"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('gudang','id','gudang_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -35,7 +35,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Produk') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="produk"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('items','id','item_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -46,7 +46,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Merek') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="merek"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('product_merek','id','merek_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -56,7 +56,7 @@
                                 <div class="form-group">
                                     <label class="control-label">{{ _lang('Kategori') }}</label>
                                     <select class="form-control select2 select2 select-filter" name="kategori"
-                                        data-selected="1" multiple="true">
+                                        data-selected="1" multiple="false">
                                         {{ create_option('product_kategori','id','kategori_name','',array('company_id=' => company_id())) }}
                                     </select>
                                 </div>
@@ -81,6 +81,4 @@
 @endsection
 
 
-@section('js-script')
 <script src="{{ asset('public/backend/assets/js/datatables/persediaan-barang-table-report.js?v=1.1') }}"></script>
-@endsection
