@@ -96,5 +96,3 @@
     
     <!-- Datatable js -->
     <script src="https://cloud.te-pos.com/public/backend/plugins/datatable/datatables.min.js"></script>
-    <!-- App js -->
-    <script src="https://cloud.te-pos.com/public/backend/assets/js/scripts.js?v=1.1"></script>
