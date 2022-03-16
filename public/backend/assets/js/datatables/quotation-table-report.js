@@ -1,6 +1,6 @@
 (function($) {
     var getUrl = window.location;
-    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+    var baseUrl = getUrl .protocol + "//" + getUrl.host ;
     $(document).ready(function() {
         actControl('data');
        $("#submit").click(function() {
