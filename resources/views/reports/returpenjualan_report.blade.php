@@ -65,8 +65,9 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('public/backend/assets/js/jquery-3.6.0.min.js') }}"></script>
+<script src="{{ asset('public/backend/assets/js/datatables/returpenjualan-table-report.js?v=1.1') }}"></script>
 
 @endsection
 
 
-<script src="{{ asset('public/backend/assets/js/datatables/returpenjualan-table-report.js?v=1.1') }}"></script>
