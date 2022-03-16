@@ -69,7 +69,7 @@
                 </div>
                 <!--End Report param-->
 
-                <div id="isipersediaanbarang">
+                <div id="isi">
                     
                 </div>
                 
