@@ -407,7 +407,7 @@ class ReportController extends Controller {
             }
         }
         if ($str_cabang!=""){
-            $cabang_query  = 'AND pembelian.cabang_id IN (' .  $str_cabang .')';
+            $cabang_query  = 'AND hpp.cabang_id IN (' .  $str_cabang .')';
         }
         else{
             $cabang_query  ='';
