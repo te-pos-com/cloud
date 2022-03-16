@@ -42,7 +42,7 @@
         div.scrollmenu {
             overflow: auto;
             white-space: nowrap;
-            height:600px;
+            height:500px;
             float: left;
         }
         
@@ -98,8 +98,50 @@
     <div id="preloader"></div>
     <!-- Preloader area end -->
 
-    
-    
+    <!--Header Nav-->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-md-center"
+                href="{{ route('dashboard') }}">{{ get_option('site_title', config('app.name')) }}</a>
+            <button class="btn btn-link btn-sm mr-auto" id="sidebarToggle" href="#">
+                <div class="lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+
+            <ul class="navbar-nav ml-auto ml-md-0">
+                <li class="nav-item dropdown animate-dropdown">
+                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"><i class="ti-user"></i> {{ Auth::user()->name }}</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        @if(Auth::user()->user_type == 'user' && get_option('membership_system') == 'enabled')
+							<a class="dropdown-item" href="{{ route('membership.extend') }}"><i class="ti-id-badge"></i> {{ _lang('Extend Membership') }}</a>
+						@endif
+                        <a class="dropdown-item" href="{{ route('profile.index') }}"><i class="ti-user"></i>
+                            {{ _lang('My Profile') }}</a>
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="ti-settings"></i>
+                            {{ _lang('Profile Settings') }}</a>
+                        <a class="dropdown-item" href="{{ route('profile.change_password') }}"><i
+                                class="ti-exchange-vertical"></i> {{ _lang('Change Password') }}</a>
+                        @if(Auth::user()->user_type == 'admin')      
+                        <a class="dropdown-item" href="{{ route('settings.update_settings') }}"><i
+                                class="ti-panel"></i> {{ _lang('System Settings') }}</a>
+                        @elseif(Auth::user()->user_type == 'user')   
+                        <a class="dropdown-item" href="{{ route('company.change_settings') }}"><i
+                                class="ti-settings"></i> {{ _lang('Company Settings') }}</a>
+                        @endif
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('logout') }}"><i class="ti-power-off"></i>
+                            {{ _lang('Logout') }}</a>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+    <!--End Header Nav-->
 
     <div id="layoutSidenav" class="container-fluid d-flex align-items-stretch">
         <div id="layoutSidenav_nav">
@@ -129,50 +171,8 @@
         </div>
         <!--ENd layoutSidenav_nav-->
 
-        
         <div id="layoutSidenav_content">
             <main>
-                <div class="row">
-                    <div class="col-10">
-                        <button class="btn btn-link btn-sm mr-auto" style="margin: 0px 0px 10px 0px;padding: 5px;" id="sidebarToggle" href="#">
-                            <div class="lines">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </button>
-                    </div>
-                    <div class="col-1 text-left">
-                        <ul class="navbar-nav ml-auto ml-md-0" style="height:10px">
-                            <li class="nav-item dropdown animate-dropdown">
-                                <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false"><i class="ti-user"></i> {{ Auth::user()->name }}</a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                    @if(Auth::user()->user_type == 'user' && get_option('membership_system') == 'enabled')
-                                        <a class="dropdown-item" href="{{ route('membership.extend') }}"><i class="ti-id-badge"></i> {{ _lang('Extend Membership') }}</a>
-                                    @endif
-                                    <a class="dropdown-item" href="{{ route('profile.index') }}"><i class="ti-user"></i>
-                                        {{ _lang('My Profile') }}</a>
-                                    <a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="ti-settings"></i>
-                                        {{ _lang('Profile Settings') }}</a>
-                                    <a class="dropdown-item" href="{{ route('profile.change_password') }}"><i
-                                            class="ti-exchange-vertical"></i> {{ _lang('Change Password') }}</a>
-                                    @if(Auth::user()->user_type == 'admin')      
-                                    <a class="dropdown-item" href="{{ route('settings.update_settings') }}"><i
-                                            class="ti-panel"></i> {{ _lang('System Settings') }}</a>
-                                    @elseif(Auth::user()->user_type == 'user')   
-                                    <a class="dropdown-item" href="{{ route('company.change_settings') }}"><i
-                                            class="ti-settings"></i> {{ _lang('Company Settings') }}</a>
-                                    @endif
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{ url('logout') }}"><i class="ti-power-off"></i>
-                                        {{ _lang('Logout') }}</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
                 @if(get_option('membership_system') == 'enabled' && Auth::user()->user_type == 'user')
                     @if( Auth::user()->valid_to < date('Y-m-d'))
                         <div class="alert alert-danger">

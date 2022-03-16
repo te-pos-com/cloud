@@ -159,12 +159,12 @@ sup {
 }
 
 a {
-  color: #fff;
+  color: rgb(3, 3, 3);
   text-decoration: none;
   background-color: transparent;
 }
 a:hover {
-  color: #fff;
+  color: rgb(8, 133, 190);
   text-decoration: underline;
 }
 
@@ -2910,6 +2910,7 @@ fieldset:disabled a.btn {
   font-size: 0.875rem;
   line-height: 1.5;
   border-radius: 0.2rem;
+
 }
 
 .btn-block {
@@ -10039,7 +10040,7 @@ body {
 }
 
 #layoutSidenav {
-  padding-top: 60px;
+  /*padding-top: 60px;*/
   display: flex;
   overflow: hidden;
 }
@@ -10207,7 +10208,7 @@ body {
 #sidebarToggle .lines span {
     height: 2px;
     width: 100%;
-    background-color: rgba(255,255,255,.8);
+    background-color: #000;
     display: block;
     margin-bottom: 5px;
     -webkit-transition: -webkit-transform .5s ease;
@@ -10246,7 +10247,7 @@ body {
 .sb-sidenav {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 1000px;
   flex-wrap: nowrap;
   width: 250px;
   padding-bottom: 50px;
@@ -10327,7 +10328,7 @@ body {
 }
 
 .sb-sidenav-light {
-  background-color: #157F1F !important;
+  background-color: #6395ec !important;
   color: #ffffff;
   position: relative;
   -webkit-box-shadow: 0 0 35px 0 rgb(154 161 171 / 15%);
@@ -10341,16 +10342,16 @@ body {
   color: #fff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: #adb5bd;
+  color: #fff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
-  color: #adb5bd;
+  color: #fff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link:hover {
-  color: #ff0;
+  color: #fbff00;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active {
-  color: #ff0;
+  color: #fbff00;
   font-weight: 500;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {

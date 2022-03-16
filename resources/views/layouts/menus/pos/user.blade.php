@@ -1,11 +1,11 @@
 <div class="scrollmenu">
     <div class="sb-sidenav-menu-heading">{{ _lang('NAVIGATIONS') }}</div>
-    <a class="nav-link" href="{{ route('dashboard') }}">
+    <a class="nav-link" style="background-image: linear-gradient(#6395ec, #3679ec);" href="{{ route('dashboard') }}">
         <div class="sb-nav-link-icon"><i class="ti-dashboard"></i></div>
         {{ _lang('Dashboard') }}
     </a>
 
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#master" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#master" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-id-badge"></i></div>
         Master
@@ -25,7 +25,7 @@
         </nav>
     </div>
 
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#purchase_orders" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#purchase_orders" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-bag"></i></div>
         {{ _lang('Purchase') }}
@@ -37,7 +37,7 @@
         </nav>
     </div>
 
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#sales" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#sales" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-shopping-cart-full"></i></div>
         {{ _lang('Sales') }}
@@ -49,7 +49,7 @@
         </nav>
     </div>
 
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#transactions" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#transactions" aria-expanded="false"
     aria-controls="collapseLayouts">
     <div class="sb-nav-link-icon"><i class="ti-receipt"></i></div>
     {{ _lang('Keuangan') }}
@@ -63,7 +63,7 @@
             <a class="nav-link" href="{{ route('income.income_calendar') }}">{{ _lang('Kalender Penerimaan') }}</a>
         </nav>
     </div>
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#reports" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#reports" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-bar-chart"></i></div>
         {{ _lang('Reports') }}
@@ -85,7 +85,7 @@
 
     <div class="sb-sidenav-menu-heading">{{ _lang('Company Settings') }}</div>
 
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#staffs" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#staffs" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-user"></i></div>
         {{ _lang('Staff Management') }}
@@ -100,7 +100,7 @@
         </nav>
     </div>
 
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#company_settings" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#company_settings" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-settings"></i></div>
         {{ _lang('Company Settings') }}
@@ -113,7 +113,7 @@
         </nav>
     </div>
 
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#transaction_settings" aria-expanded="false"
+    <a class="nav-link collapsed" style="background-image: linear-gradient(#6395ec, #3679ec);" href="#" data-toggle="collapse" data-target="#transaction_settings" aria-expanded="false"
         aria-controls="collapseLayouts">
         <div class="sb-nav-link-icon"><i class="ti-credit-card"></i></div>
         {{ _lang('Transaction Settings') }}
